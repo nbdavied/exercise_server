@@ -7,7 +7,6 @@ public class UserAuth {
     private String server;
     private String token;
     private Date genTime;
-    private String salt;
 
     public int getUserId() {
         return userId;
@@ -41,11 +40,4 @@ public class UserAuth {
         this.genTime = genTime;
     }
 
-    public String getSalt() {
-        return salt;
-    }
-
-    public void setSalt(String salt) {
-        this.salt = salt;
-    }
 }

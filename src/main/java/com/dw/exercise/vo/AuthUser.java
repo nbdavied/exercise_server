@@ -1,5 +1,8 @@
 package com.dw.exercise.vo;
 
+import com.dw.exercise.entity.User;
+import com.dw.exercise.entity.UserAuth;
+
 import java.util.Date;
 
 /**
@@ -7,7 +10,7 @@ import java.util.Date;
  */
 public class AuthUser {
     private int id;
-    private String name;
+    private String username;
     private String nickname;
     private String gender;
     private String birthday;
@@ -19,9 +22,8 @@ public class AuthUser {
     private Date regTime;
 
     private String server;
-    private String token;
+    private String password;
     private Date genTime;
-    private String salt;
 
     public int getId() {
         return id;
@@ -31,12 +33,12 @@ public class AuthUser {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getUsername() {
+        return username;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getNickname() {
@@ -119,12 +121,12 @@ public class AuthUser {
         this.server = server;
     }
 
-    public String getToken() {
-        return token;
+    public String getPassword() {
+        return password;
     }
 
-    public void setToken(String token) {
-        this.token = token;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public Date getGenTime() {
@@ -135,11 +137,28 @@ public class AuthUser {
         this.genTime = genTime;
     }
 
-    public String getSalt() {
-        return salt;
-    }
 
-    public void setSalt(String salt) {
-        this.salt = salt;
+    public User toUser(){
+        User user = new User();
+        user.setId(this.getId());
+        user.setUsername(this.username);
+        user.setNickname(this.nickname);
+        user.setGender(this.gender);
+        user.setBirthday(this.birthday);
+        user.setCertid(this.certid);
+        user.setMobile(this.mobile);
+        user.setEmail(this.email);
+        user.setAddress(this.address);
+        user.setAvatar(this.avatar);
+        user.setRegTime(this.regTime);
+        return user;
+    }
+    public UserAuth toUserAuth(){
+        UserAuth auth = new UserAuth();
+        auth.setUserId(this.id);
+        auth.setServer(this.server);
+        auth.setToken(this.password);
+        auth.setGenTime(this.genTime);
+        return auth;
     }
 }

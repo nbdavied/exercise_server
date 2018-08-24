@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dw.exercise.mapper.UserMapper">
+    <insert id="createUser" useGeneratedKeys="true" keyProperty="id">
+        insert into user (
+          username, nickname, gender, birthday, certid, mobile, email, address, avatar, reg_time
+          )
+        values(
+          #{username}, #{nickname, jdbcType=VARCHAR},  #{gender, jdbcType=VARCHAR}, #{birthday, jdbcType=VARCHAR},
+           #{certid, jdbcType=VARCHAR}, #{mobile, jdbcType=VARCHAR}, #{email, jdbcType=VARCHAR}, #{address, jdbcType=VARCHAR},
+           #{avatar, jdbcType=VARCHAR}, #{regTime, jdbcType=TIMESTAMP}
+          )
+    </insert>
+    <insert id="createUserAuth">
+        insert into user_auth(
+            user_id, server, token, gen_time)
+        values (
+          #{userId}, #{server}, #{token}, #{genTime, jdbcType=TIMESTAMP}
+        )
+    </insert>
+</mapper>

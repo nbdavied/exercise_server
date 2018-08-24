@@ -1,18 +1,51 @@
 package com.dw.exercise.controller;
 
+import com.dw.exercise.entity.User;
+import com.dw.exercise.entity.UserAuth;
+import com.dw.exercise.mapper.UserMapper;
 import com.dw.exercise.vo.AuthUser;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
+import java.util.Date;
 
 @RestController()
 @RequestMapping("/user")
 public class UserController {
+    @Resource
+    UserMapper userMapper;
+
     @RequestMapping("/login")
     public String login(AuthUser user){
         return "xxx";
     }
-    @RequestMapping("/register")
-    public String register(AuthUser user) {
+    @RequestMapping(value = "/sign-up", method = RequestMethod.POST)
+    public String signUp(AuthUser authUser, HttpServletResponse response) {
+        if(StringUtils.isEmpty(authUser.getUsername())){
+            response.setStatus(HttpServletResponse.SC_NOT_ACCEPTABLE);
+            return "fail";
+        }
+        if(StringUtils.isEmpty(authUser.getPassword())){
+            response.setStatus(HttpServletResponse.SC_NOT_ACCEPTABLE);
+            return "fail";
+        }
+        User user = authUser.toUser();
+        UserAuth auth = authUser.toUserAuth();
+
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        Date now = new Date();
+        user.setRegTime(now);
+        auth.setGenTime(now);
+        auth.setToken(encoder.encode(auth.getToken()));
+        auth.setServer("local");
+        userMapper.createUser(user);
+        auth.setUserId(user.getId());
+        userMapper.createUserAuth(auth);
         return "";
     }
 }
