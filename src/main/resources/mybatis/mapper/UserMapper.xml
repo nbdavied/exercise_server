@@ -19,4 +19,11 @@
           #{userId}, #{server}, #{token}, #{genTime, jdbcType=TIMESTAMP}
         )
     </insert>
+    <select id="getUserByUsername" resultType="User">
+        select id, username, nickname, gender, birthday, certid, mobile, email, address, avatar, reg_time
+        from user where username = #{username}
+    </select>
+    <select id="getUserAuthByIdAndServer" resultType="UserAuth">
+        select  user_id, server, token, gen_time from user_auth where user_id = #{userId} and server = #{server}
+    </select>
 </mapper>

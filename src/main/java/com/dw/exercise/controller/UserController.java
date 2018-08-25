@@ -6,9 +6,7 @@ import com.dw.exercise.mapper.UserMapper;
 import com.dw.exercise.vo.AuthUser;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
@@ -24,8 +22,8 @@ public class UserController {
     public String login(AuthUser user){
         return "xxx";
     }
-    @RequestMapping(value = "/sign-up", method = RequestMethod.POST)
-    public String signUp(AuthUser authUser, HttpServletResponse response) {
+    @PostMapping("/sign-up")
+    public String signUp(@RequestBody AuthUser authUser, HttpServletResponse response) {
         if(StringUtils.isEmpty(authUser.getUsername())){
             response.setStatus(HttpServletResponse.SC_NOT_ACCEPTABLE);
             return "fail";

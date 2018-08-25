@@ -9,4 +9,8 @@ public interface UserMapper {
     public int createUser(User user);
 
     public int createUserAuth(UserAuth auth);
+
+    public User getUserByUsername(String username);
+
+    public UserAuth getUserAuthByIdAndServer(UserAuth auth);
 }
