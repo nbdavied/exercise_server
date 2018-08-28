@@ -3,6 +3,7 @@ package com.dw.exercise.security;
 import com.auth0.jwt.JWT;
 import com.dw.exercise.vo.AuthUser;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -15,6 +16,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -50,6 +52,12 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                 .withSubject(((User)authResult.getPrincipal()).getUsername())
                 .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
                 .sign(HMAC512(SECRET.getBytes()));
-        response.addHeader(HEADER_STRING, TOKEN_PREFIX + token);
+        //response.addHeader(HEADER_STRING, TOKEN_PREFIX + token);
+        response.addHeader(HttpHeaders.CONTENT_TYPE, "application/json; charset=utf-8");
+        String result = "{\"token\":\"" + token+ "\"}";
+        PrintWriter writer = response.getWriter();
+        writer.write(result);
+        writer.flush();
+        writer.close();
     }
 }

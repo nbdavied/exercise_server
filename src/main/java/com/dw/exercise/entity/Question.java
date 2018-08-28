@@ -7,6 +7,7 @@ public class Question {
     private String wrongChoices;
     private String type;
     private String editFlag;
+    private int bankId;
 
     public int getId() {
         return id;
@@ -54,5 +55,13 @@ public class Question {
 
     public void setEditFlag(String editFlag) {
         this.editFlag = editFlag;
+    }
+
+    public int getBankId() {
+        return bankId;
+    }
+
+    public void setBankId(int bankId) {
+        this.bankId = bankId;
     }
 }

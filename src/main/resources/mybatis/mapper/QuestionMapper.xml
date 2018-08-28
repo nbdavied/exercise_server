@@ -5,4 +5,20 @@
     <insert id="createQuestion">
         insert into question (question, right_choices, wrong_choices) values(#{question}, #{rightChoices}, #{wrongChoices})
     </insert>
+    <select id="getNextQuestionInBankId" resultType="Question">
+        select id, question, right_choices, wrong_choices,type, edit_flag, bank_id
+        from question where bank_id = #{bankId} and id > #{id} limit 1
+    </select>
+    <select id="getQuestionRandomlyInBankId" resultType="Question">
+        select id, question, right_choices, wrong_choices,type, edit_flag, bank_id from question where id >= (
+          round(
+            ((select max(id) from question where bank_id = #{bankId}) - (select min(id) from question where bank_id = #{bankId}))* rand()
+          ) + (select min(id) from question where bank_id = #{bankId})
+        ) and bank_id = #{bankId}
+        limit 1
+    </select>
+
+    <select id="getChoiceById" resultType="Choice">
+        select id, text from choice where id = #{id}
+    </select>
 </mapper>
