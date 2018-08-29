@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @RestController()
 @RequestMapping("/user")
@@ -41,9 +43,17 @@ public class UserController {
         auth.setGenTime(now);
         auth.setToken(encoder.encode(auth.getToken()));
         auth.setServer("local");
+        List<String> roles = new ArrayList<String>();
+        roles.add("user");
+        user.setRoles(roles);
         userMapper.createUser(user);
         auth.setUserId(user.getId());
         userMapper.createUserAuth(auth);
         return "";
+    }
+    @GetMapping()
+    User getUsers(){
+        User user = userMapper.getUserByUsername("testuser2");
+        return user;
     }
 }

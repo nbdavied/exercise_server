@@ -2,14 +2,28 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.dw.exercise.mapper.UserMapper">
+    <resultMap id="userMap" type="User">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="username" property="username" jdbcType="VARCHAR" />
+        <result column="nickname" property="nickname" jdbcType="VARCHAR" />
+        <result column="gender" property="gender" jdbcType="VARCHAR" />
+        <result column="birthday" property="birthday" jdbcType="VARCHAR" />
+        <result column="certid" property="certid" jdbcType="VARCHAR" />
+        <result column="mobile" property="mobile" jdbcType="VARCHAR" />
+        <result column="email" property="email" jdbcType="VARCHAR" />
+        <result column="address" property="address" jdbcType="VARCHAR" />
+        <result column="avatar" property="avatar" jdbcType="VARCHAR" />
+        <result column="reg_time" property="regTime" jdbcType="TIMESTAMP" />
+        <result column="roles" property="roles" jdbcType="VARCHAR" typeHandler="com.dw.util.mybatis.handler.ListTypeHandler"/>
+    </resultMap>
     <insert id="createUser" useGeneratedKeys="true" keyProperty="id">
         insert into user (
-          username, nickname, gender, birthday, certid, mobile, email, address, avatar, reg_time
+          username, nickname, gender, birthday, certid, mobile, email, address, avatar, reg_time, roles
           )
         values(
           #{username}, #{nickname, jdbcType=VARCHAR},  #{gender, jdbcType=VARCHAR}, #{birthday, jdbcType=VARCHAR},
            #{certid, jdbcType=VARCHAR}, #{mobile, jdbcType=VARCHAR}, #{email, jdbcType=VARCHAR}, #{address, jdbcType=VARCHAR},
-           #{avatar, jdbcType=VARCHAR}, #{regTime, jdbcType=TIMESTAMP}
+           #{avatar, jdbcType=VARCHAR}, #{regTime, jdbcType=TIMESTAMP}, #{roles, typeHandler=com.dw.util.mybatis.handler.ListTypeHandler}
           )
     </insert>
     <insert id="createUserAuth">
@@ -19,8 +33,8 @@
           #{userId}, #{server}, #{token}, #{genTime, jdbcType=TIMESTAMP}
         )
     </insert>
-    <select id="getUserByUsername" resultType="User">
-        select id, username, nickname, gender, birthday, certid, mobile, email, address, avatar, reg_time
+    <select id="getUserByUsername" resultMap="userMap">
+        select id, username, nickname, gender, birthday, certid, mobile, email, address, avatar, reg_time, roles
         from user where username = #{username}
     </select>
     <select id="getUserAuthByIdAndServer" resultType="UserAuth">
