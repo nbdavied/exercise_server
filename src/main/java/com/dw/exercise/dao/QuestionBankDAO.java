@@ -1,4 +1,4 @@
-package com.dw.exercise.mapper;
+package com.dw.exercise.dao;
 
 import com.dw.exercise.entity.QuestionBank;
 import org.apache.ibatis.annotations.Mapper;
@@ -6,6 +6,6 @@ import org.apache.ibatis.annotations.Mapper;
 import java.util.List;
 
 @Mapper()
-public interface QuestionBankMapper {
+public interface QuestionBankDAO {
     List<QuestionBank> getBanks();
 }

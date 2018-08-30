@@ -2,7 +2,7 @@ package com.dw.exercise.controller;
 
 import com.dw.exercise.entity.User;
 import com.dw.exercise.entity.UserAuth;
-import com.dw.exercise.mapper.UserMapper;
+import com.dw.exercise.dao.UserDAO;
 import com.dw.exercise.vo.AuthUser;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.util.StringUtils;
@@ -18,7 +18,7 @@ import java.util.List;
 @RequestMapping("/user")
 public class UserController {
     @Resource
-    UserMapper userMapper;
+    private UserDAO userDAO;
 
     @RequestMapping("/login")
     public String login(AuthUser user){
@@ -43,17 +43,17 @@ public class UserController {
         auth.setGenTime(now);
         auth.setToken(encoder.encode(auth.getToken()));
         auth.setServer("local");
-        List<String> roles = new ArrayList<String>();
+        List<String> roles = new ArrayList<>();
         roles.add("user");
         user.setRoles(roles);
-        userMapper.createUser(user);
+        userDAO.createUser(user);
         auth.setUserId(user.getId());
-        userMapper.createUserAuth(auth);
+        userDAO.createUserAuth(auth);
         return "";
     }
     @GetMapping()
     User getUsers(){
-        User user = userMapper.getUserByUsername("testuser2");
+        User user = userDAO.getUserByUsername("testuser2");
         return user;
     }
 }

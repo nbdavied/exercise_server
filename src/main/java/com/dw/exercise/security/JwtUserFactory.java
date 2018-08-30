@@ -5,6 +5,7 @@ import com.dw.exercise.entity.UserAuth;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,6 +20,9 @@ public class JwtUserFactory {
     }
 
     private static List<GrantedAuthority> mapToGrantedAuthorities(List<String> roles) {
+        if(roles == null){
+            return new ArrayList<>();
+        }
         return roles.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
     }
 }

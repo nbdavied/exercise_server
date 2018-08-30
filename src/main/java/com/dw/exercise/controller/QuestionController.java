@@ -2,10 +2,10 @@ package com.dw.exercise.controller;
 
 import com.dw.exercise.entity.Choice;
 import com.dw.exercise.entity.Question;
-import com.dw.exercise.mapper.QuestionMapper;
+import com.dw.exercise.dao.QuestionDAO;
 import com.dw.exercise.vo.QuestionNoAnswer;
 import com.dw.exercise.vo.QuestionWithAnswer;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -18,9 +18,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/question")
+@PreAuthorize("hasRole('USER')")
 public class QuestionController {
     @Resource
-    private QuestionMapper questionMapper;
+    private QuestionDAO questionMapper;
 
     @RequestMapping("/{bankId}")
     public QuestionNoAnswer nextQuestion(@PathVariable("bankId") int bankId, String method, Integer last){
