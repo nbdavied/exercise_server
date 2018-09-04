@@ -14,7 +14,7 @@
         <result column="address" property="address" jdbcType="VARCHAR" />
         <result column="avatar" property="avatar" jdbcType="VARCHAR" />
         <result column="reg_time" property="regTime" jdbcType="TIMESTAMP" />
-        <result column="roles" property="roles" jdbcType="VARCHAR" typeHandler="com.dw.util.mybatis.handler.ListTypeHandler"/>
+        <result column="roles" property="roles" jdbcType="VARCHAR" typeHandler="com.dw.util.mybatis.handler.StringListTypeHandler"/>
     </resultMap>
     <insert id="createUser" useGeneratedKeys="true" keyProperty="id">
         insert into user (
@@ -23,7 +23,7 @@
         values(
           #{username}, #{nickname, jdbcType=VARCHAR},  #{gender, jdbcType=VARCHAR}, #{birthday, jdbcType=VARCHAR},
            #{certid, jdbcType=VARCHAR}, #{mobile, jdbcType=VARCHAR}, #{email, jdbcType=VARCHAR}, #{address, jdbcType=VARCHAR},
-           #{avatar, jdbcType=VARCHAR}, #{regTime, jdbcType=TIMESTAMP}, #{roles, typeHandler=com.dw.util.mybatis.handler.ListTypeHandler}
+           #{avatar, jdbcType=VARCHAR}, #{regTime, jdbcType=TIMESTAMP}, #{roles, typeHandler=com.dw.util.mybatis.handler.StringListTypeHandler}
           )
     </insert>
     <insert id="createUserAuth">

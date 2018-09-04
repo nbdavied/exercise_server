@@ -1,9 +1,7 @@
 package com.dw.exercise.security;
 
-import com.dw.exercise.service.impl.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -19,8 +17,6 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import javax.annotation.Resource;
 
-import static com.dw.exercise.security.SecurityConstants.SIGN_UP_URL;
-
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurity extends WebSecurityConfigurerAdapter {
@@ -34,7 +30,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable().authorizeRequests()
-                .antMatchers("/banks","/auth/**").permitAll()
+                .antMatchers("/banks","/auth/**", "/question/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 //.addFilter(new JWTAuthenticationFilter(authenticationManager()))

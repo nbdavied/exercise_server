@@ -2,14 +2,36 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.dw.exercise.dao.QuestionDAO">
-    <insert id="createQuestion">
-        insert into question (question, right_choices, wrong_choices) values(#{question}, #{rightChoices}, #{wrongChoices})
+    <resultMap id="questionMap" type="Question">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="question" property="question" jdbcType="VARCHAR"/>
+        <result column="right_choices" property="rightChoices" jdbcType="VARCHAR"
+                typeHandler="com.dw.util.mybatis.handler.IntegerListTypeHandler"/>
+        <result column="wrong_choices" property="wrongChoices" jdbcType="VARCHAR"
+                typeHandler="com.dw.util.mybatis.handler.IntegerListTypeHandler"/>
+        <result column="type" property="type" jdbcType="VARCHAR"/>
+        <result column="edit_flag" property="editFlag" jdbcType="VARCHAR"/>
+        <result column="bank_id" property="bankId" jdbcType="INTEGER"/>
+    </resultMap>
+    <insert id="createQuestion" useGeneratedKeys="true" keyProperty="id">
+        insert into question (question, right_choices, wrong_choices, type, edit_flag, bank_id)
+        values(#{question},
+        #{rightChoices, typeHandler=com.dw.util.mybatis.handler.IntegerListTypeHandler},
+        #{wrongChoices, typeHandler=com.dw.util.mybatis.handler.IntegerListTypeHandler}, #{type}, #{editFlag}, #{bankId})
     </insert>
-    <select id="getNextQuestionInBankId" resultType="Question">
+    <insert id="insertChoice" useGeneratedKeys="true" keyProperty="id">
+        insert into choice(text) values(#{text})
+    </insert>
+    <select id="getNextQuestionInBankId" resultMap="questionMap">
         select id, question, right_choices, wrong_choices,type, edit_flag, bank_id
         from question where bank_id = #{bankId} and id > #{id} limit 1
     </select>
-    <select id="getQuestionRandomlyInBankId" resultType="Question">
+    <select id="getNextQuestionInWrongCollection" resultMap="questionMap">
+        select id, question, right_choices, wrong_choices, type, edit_flag, bank_id from question
+          where id in (select question_id from wrong_collection where user_id = #{2} and bank_id = #{0})
+          and id > #{1} limit 1
+    </select>
+    <select id="getQuestionRandomlyInBankId" resultMap="questionMap">
         select id, question, right_choices, wrong_choices,type, edit_flag, bank_id from question where id >= (
           round(
             ((select max(id) from question where bank_id = #{bankId}) - (select min(id) from question where bank_id = #{bankId}))* rand()
@@ -17,7 +39,9 @@
         ) and bank_id = #{bankId}
         limit 1
     </select>
-
+    <select id="getQuestionById" resultMap="questionMap">
+      select id, question, right_choices, wrong_choices,type, edit_flag, bank_id from question where id = #{id}
+    </select>
     <select id="getChoiceById" resultType="Choice">
         select id, text from choice where id = #{id}
     </select>

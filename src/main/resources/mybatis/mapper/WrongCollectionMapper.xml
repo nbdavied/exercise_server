@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dw.exercise.dao.WrongCollectionDAO">
+    <insert id="insert">
+        insert into wrong_collection (user_id, question_id, bank_id) values(#{userId}, #{questionId}, #{bankId})
+    </insert>
+    <select id="randomlySelect" resultType="WrongCollection">
+        select id, user_id, question_id, bank_id from wrong_collection where id >=(
+          round(
+            (
+              (select max(id) from wrong_collection where bank_id = #{bankId} and user_id = #{userId})
+              -(select min(id) from wrong_collection where bank_id = #{bankId} and user_id = #{userId})
+            ) * rand()
+          ) + (select min(id) from wrong_collection where bank_id = #{bankId} and user_id = #{userId})
+        ) and bank_id = #{bankId} and user_id = #{userId}
+        limit 1
+    </select>
+    <delete id="deleteWrongCollection">
+        delete from wrong_collection where user_id = #{userId} and question_id = #{questionId}
+    </delete>
+</mapper>

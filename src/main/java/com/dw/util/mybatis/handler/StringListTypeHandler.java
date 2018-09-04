@@ -12,7 +12,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 @MappedJdbcTypes(JdbcType.VARCHAR)
-public class ListTypeHandler extends BaseTypeHandler<List<String>> {
+public class StringListTypeHandler extends BaseTypeHandler<List<String>> {
 
     @Override
     public void setNonNullParameter(PreparedStatement ps, int i, List<String> parameter, JdbcType jdbcType) throws SQLException {

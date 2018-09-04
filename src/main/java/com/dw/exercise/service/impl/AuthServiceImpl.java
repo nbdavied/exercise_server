@@ -44,6 +44,9 @@ public class AuthServiceImpl implements AuthService {
         if(StringUtils.isEmpty(authUser.getNickname())){
             throw new RuntimeException("昵称不能为空");
         }
+        if(userDAO.getUserByUsername(authUser.getUsername()) != null){
+            throw new RuntimeException("用户名已存在");
+        }
         User user = authUser.toUser();
         UserAuth auth = authUser.toUserAuth();
 
