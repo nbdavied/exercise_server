@@ -1,16 +1,15 @@
 package com.dw.exercise.controller;
 
+import com.dw.exercise.dao.QuestionBankDAO;
 import com.dw.exercise.dao.UserDAO;
 import com.dw.exercise.dao.WrongCollectionDAO;
-import com.dw.exercise.entity.Choice;
-import com.dw.exercise.entity.Question;
+import com.dw.exercise.entity.*;
 import com.dw.exercise.dao.QuestionDAO;
-import com.dw.exercise.entity.User;
-import com.dw.exercise.entity.WrongCollection;
 import com.dw.exercise.service.QuestionService;
 import com.dw.exercise.vo.QuestionNoAnswer;
 import com.dw.exercise.vo.QuestionWithAnswer;
 import com.dw.util.StringUtil;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.springframework.lang.Nullable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -35,6 +34,8 @@ public class QuestionController {
     private WrongCollectionDAO wrongCollectionDAO;
     @Resource
     private QuestionService questionService;
+    @Resource
+    private QuestionBankDAO questionBankDAO;
 
     /**
      * 顺序获取题库中下一题
@@ -178,15 +179,17 @@ public class QuestionController {
     @PreAuthorize("hasRole('ADMIN')")
     @Transactional
     public void createQuestion(@RequestBody QuestionWithAnswer question){
-        insertQuestionWithAnswer(question);
+        insertQuestionWithAnswer(question, question.getBankId());
     }
-    @PostMapping()
+    @PostMapping("/create")
     @PreAuthorize("hasRole('ADMIN')")
     @Transactional
-    public void createBank(MultipartFile file, String bankname) throws IOException {
+    public void createBank(MultipartFile file, String bankname) throws IOException, InvalidFormatException {
         List<QuestionWithAnswer> qlist = questionService.parse(file.getInputStream());
+        QuestionBank bank = new QuestionBank(bankname);
+        questionBankDAO.createBank(bank);
         for(QuestionWithAnswer q : qlist){
-            insertQuestionWithAnswer(q);
+            insertQuestionWithAnswer(q, bank.getId());
         }
     }
     private QuestionNoAnswer prepareQuestion(@Nullable Question q){
@@ -211,10 +214,10 @@ public class QuestionController {
         result.setEditFlag(q.getEditFlag());
         return result;
     }
-    private void insertQuestionWithAnswer(QuestionWithAnswer question){
+    private void insertQuestionWithAnswer(QuestionWithAnswer question, int bankId){
         Question q = new Question();
         q.setQuestion(question.getQuestion());
-        q.setBankId(question.getBankId());
+        q.setBankId(bankId);
         q.setEditFlag("0");
         q.setType(question.getType());
         List<Integer> choiceIds = new ArrayList<>();

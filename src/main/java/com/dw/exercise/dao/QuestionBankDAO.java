@@ -8,4 +8,5 @@ import java.util.List;
 @Mapper()
 public interface QuestionBankDAO {
     List<QuestionBank> getBanks();
+    int createBank(QuestionBank bank);
 }

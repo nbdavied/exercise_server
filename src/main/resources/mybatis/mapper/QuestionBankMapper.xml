@@ -5,4 +5,7 @@
     <select id="getBanks" resultType="QuestionBank">
         select id, name from question_bank
     </select>
+    <insert id="createBank" useGeneratedKeys="true" keyProperty="id">
+        isnert question_bank (name) values(#{name})
+    </insert>
 </mapper>
