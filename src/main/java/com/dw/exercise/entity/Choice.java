@@ -1,6 +1,7 @@
 package com.dw.exercise.entity;
 
-public class Choice {
+
+public class Choice{
     private int id;
     private String text;
 

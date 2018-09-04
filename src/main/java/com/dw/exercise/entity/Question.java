@@ -1,10 +1,12 @@
 package com.dw.exercise.entity;
 
+import java.util.List;
+
 public class Question {
     private int id;
     private String question;
-    private String rightChoices;
-    private String wrongChoices;
+    private List<Integer> rightChoices;
+    private List<Integer> wrongChoices;
     private String type;
     private String editFlag;
     private int bankId;
@@ -25,19 +27,19 @@ public class Question {
         this.question = question;
     }
 
-    public String getRightChoices() {
+    public List<Integer> getRightChoices() {
         return rightChoices;
     }
 
-    public void setRightChoices(String rightChoices) {
+    public void setRightChoices(List<Integer> rightChoices) {
         this.rightChoices = rightChoices;
     }
 
-    public String getWrongChoices() {
+    public List<Integer> getWrongChoices() {
         return wrongChoices;
     }
 
-    public void setWrongChoices(String wrongChoices) {
+    public void setWrongChoices(List<Integer> wrongChoices) {
         this.wrongChoices = wrongChoices;
     }
 

@@ -1,6 +1,7 @@
 package com.dw.exercise.entity;
 
 import java.util.Date;
+import java.util.List;
 
 public class User {
     private int id;
@@ -14,6 +15,7 @@ public class User {
     private String address;
     private String avatar;
     private Date regTime;
+    private List<String> roles;
 
     public int getId() {
         return id;
@@ -101,5 +103,13 @@ public class User {
 
     public void setRegTime(Date regTime) {
         this.regTime = regTime;
+    }
+
+    public List<String> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<String> roles) {
+        this.roles = roles;
     }
 }

@@ -22,7 +22,7 @@ import java.util.Date;
 
 import static com.auth0.jwt.algorithms.Algorithm.HMAC512;
 import static com.dw.exercise.security.SecurityConstants.*;
-
+@Deprecated
 public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private AuthenticationManager authenticationManager;
 
@@ -49,7 +49,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
         String token = JWT.create()
-                .withSubject(((User)authResult.getPrincipal()).getUsername())
+                .withSubject(((JwtUser)authResult.getPrincipal()).getUsername())
                 .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
                 .sign(HMAC512(SECRET.getBytes()));
         //response.addHeader(HEADER_STRING, TOKEN_PREFIX + token);
@@ -59,5 +59,6 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         writer.write(result);
         writer.flush();
         writer.close();
+
     }
 }

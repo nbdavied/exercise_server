@@ -1,9 +1,10 @@
-package com.dw.exercise.service;
+package com.dw.exercise.security;
 
 
+import com.dw.exercise.entity.User;
 import com.dw.exercise.entity.UserAuth;
-import com.dw.exercise.mapper.UserMapper;
-import org.springframework.security.core.userdetails.User;
+import com.dw.exercise.dao.UserDAO;
+import com.dw.exercise.security.JwtUserFactory;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -11,23 +12,21 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 
-import static java.util.Collections.emptyList;
-
 @Service(value = "userDetailsService")
 public class UserDetailsServiceImpl implements UserDetailsService{
     @Resource
-    UserMapper userMapper;
+    UserDAO userDAO;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        com.dw.exercise.entity.User appuser = userMapper.getUserByUsername(username);
-        if(appuser == null){
+        User user = userDAO.getUserByUsername(username);
+        if(user == null){
             throw new UsernameNotFoundException(username);
         }
-        UserAuth authinfo = new UserAuth();
-        authinfo.setUserId(appuser.getId());
-        authinfo.setServer("local");
-        authinfo = userMapper.getUserAuthByIdAndServer(authinfo);
-        return new User(appuser.getUsername(), authinfo.getToken(), emptyList());
+        UserAuth auth = new UserAuth();
+        auth.setUserId(user.getId());
+        auth.setServer("local");
+        auth = userDAO.getUserAuthByIdAndServer(auth);
+        return JwtUserFactory.create(user, auth);
     }
 }
