@@ -2,6 +2,8 @@ package com.dw.exercise.service;
 
 import com.dw.exercise.entity.Choice;
 import com.dw.exercise.vo.QuestionWithAnswer;
+import com.dw.util.PoiUtil;
+import com.dw.util.StringUtil;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.*;
 import org.springframework.stereotype.Service;
@@ -47,14 +49,14 @@ public class QuestionService {
         return parseExcel(wb);
     }
     private QuestionWithAnswer parseSingleMultiRow(Row row){
-        final String question = row.getCell(0).getStringCellValue();
-        String answerString = row.getCell(1).getStringCellValue();
+        final String question = PoiUtil.getString(row.getCell(0));
+        String answerString = PoiUtil.getString(row.getCell(1));
         int[] rightIndex = parseAnswer(answerString);
         final String type = rightIndex.length > 1 ? "m" : "s";
         final List<Choice>  rightChoices = new ArrayList<>();
         for (int index : rightIndex){
             Choice choice = new Choice();
-            String text = row.getCell(index + 2).getStringCellValue();
+            String text = PoiUtil.getString(row.getCell(index + 2));
             choice.setText(text);
             rightChoices.add(choice);
         }
@@ -65,7 +67,10 @@ public class QuestionService {
             if(cell == null)
                 break;
             if(!contains(rightIndex, i - 2)){
-                String text = cell.getStringCellValue();
+                String text = PoiUtil.getString(cell);
+                if(StringUtil.isEmpty(text)){
+                    break;
+                }
                 Choice choice = new Choice();
                 choice.setText(text);
                 wrongChoices.add(choice);
@@ -81,6 +86,7 @@ public class QuestionService {
     }
     private QuestionWithAnswer parseTfRow(Row row) {
         QuestionWithAnswer q = new QuestionWithAnswer();
+        q.setQuestion(PoiUtil.getString(row.getCell(0)));
         List<Choice> rightChoices = new ArrayList<>();
         Choice right = new Choice();
         rightChoices.add(right);
@@ -89,7 +95,7 @@ public class QuestionService {
         wrongChoices.add(wrong);
         q.setRightChoices(rightChoices);
         q.setWrongChoices(wrongChoices);
-        String answer = row.getCell(1).getStringCellValue();
+        String answer = PoiUtil.getString(row.getCell(1));
         if("1".equals(answer)) {
             right.setText("正确");
             wrong.setText("错误");

@@ -24,20 +24,20 @@
     </insert>
     <select id="getNextQuestionInBankId" resultMap="questionMap">
         select id, question, right_choices, wrong_choices,type, edit_flag, bank_id
-        from question where bank_id = #{bankId} and id > #{id} limit 1
+        from question where bank_id = #{bankId} and id > #{id} order by id asc limit 1
     </select>
     <select id="getNextQuestionInWrongCollection" resultMap="questionMap">
         select id, question, right_choices, wrong_choices, type, edit_flag, bank_id from question
-          where id in (select question_id from wrong_collection where user_id = #{2} and bank_id = #{0})
-          and id > #{1} limit 1
+          where id in (select question_id from wrong_collection where user_id = #{arg2} and bank_id = #{arg0})
+          and id > #{arg1} order by id asc limit 1
     </select>
     <select id="getQuestionRandomlyInBankId" resultMap="questionMap">
-        select id, question, right_choices, wrong_choices,type, edit_flag, bank_id from question where id >= (
-          round(
-            ((select max(id) from question where bank_id = #{bankId}) - (select min(id) from question where bank_id = #{bankId}))* rand()
-          ) + (select min(id) from question where bank_id = #{bankId})
-        ) and bank_id = #{bankId}
-        limit 1
+        select t1.id, question, right_choices, wrong_choices, type, edit_flag, bank_id from question t1
+        join
+        (SELECT ROUND(RAND() * ((SELECT MAX(id) FROM question where bank_id = #{bankId})-
+        (SELECT MIN(id) FROM question  where bank_id = #{bankId}))+
+        (SELECT MIN(id) FROM question where bank_id = #{bankId})) AS id) AS t2
+        where t1.id >= t2.id and t1.bank_id = #{bankId} ORDER BY t1.id LIMIT 1;
     </select>
     <select id="getQuestionById" resultMap="questionMap">
       select id, question, right_choices, wrong_choices,type, edit_flag, bank_id from question where id = #{id}

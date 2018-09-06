@@ -21,7 +21,9 @@ public class IntegerListTypeHandler extends BaseTypeHandler<List<Integer>> {
             sb.append(String.valueOf(p));
             sb.append(",");
         }
-        sb.deleteCharAt(sb.length() -1);
+        if(parameter.size() > 0) {
+            sb.deleteCharAt(sb.length() - 1);
+        }
         ps.setString(i, sb.toString());
     }
 

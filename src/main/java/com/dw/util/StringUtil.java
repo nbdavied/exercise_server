@@ -35,4 +35,11 @@ public class StringUtil {
         sb.deleteCharAt(sb.length() - 1);
         return sb.toString();
     }
+
+    public static boolean isEmpty(String text) {
+        if(text == null || "".equals(text)){
+            return true;
+        }
+        return false;
+    }
 }

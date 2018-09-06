@@ -74,6 +74,8 @@ public class AuthServiceImpl implements AuthService {
         String token = JWT.create()
                 .withSubject(username)
                 .withClaim("uid", user.getId())
+                .withClaim("nic", user.getNickname())
+                .withArrayClaim("rol",  user.getRoles().toArray(new String[0]))
                 .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
                 .sign(HMAC512(SECRET.getBytes()));
         return token;
