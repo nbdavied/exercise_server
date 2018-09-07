@@ -45,4 +45,7 @@
     <select id="getChoiceById" resultType="Choice">
         select id, text from choice where id = #{id}
     </select>
+    <select id="countQuestionWithBankAndType" resultType="java.lang.Integer">
+
+    </select>
 </mapper>
