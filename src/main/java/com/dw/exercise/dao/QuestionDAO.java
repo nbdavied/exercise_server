@@ -18,4 +18,6 @@ public interface QuestionDAO {
     Question getQuestionById(int id);
 
     Choice getChoiceById(int id);
+
+    Integer countQuestionWithBankAndType(Question q);
 }
