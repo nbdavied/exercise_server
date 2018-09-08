@@ -7,8 +7,6 @@ import com.dw.exercise.entity.*;
 import com.dw.exercise.dao.QuestionDAO;
 import com.dw.exercise.service.QuestionService;
 import com.dw.exercise.vo.QuestionNoAnswer;
-import com.dw.exercise.vo.QuestionWithAnswer;
-import com.dw.util.StringUtil;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.springframework.lang.Nullable;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -122,17 +120,17 @@ public class QuestionController {
         if(q == null){
             throw new RuntimeException("题目不存在");
         }
-        List<Integer> answers = q.getRightChoices();
+        List<Choice> rightChoices = q.getRightChoices();
         //对登陆用户判断提交的答案是否正确
         User user = userDAO.getUserByUsername(username);
         if(user != null){
             boolean bingo = true;
-            if(subs.size() != answers.size()){
+            if(subs.size() != rightChoices.size()){
                 //判断答案数量一致
                 bingo = false;
             }else {
-                for (Integer sub : subs) {
-                    if(!answers.contains(sub)){
+                for (Choice c : rightChoices) {
+                    if(!subs.contains(c.getId())){
                         bingo = false;
                         break;
                     }
@@ -146,15 +144,19 @@ public class QuestionController {
                 wrongCollectionDAO.insert(wrong);
             }
         }
+        List<Integer> answers = new ArrayList<>();
+        for(Choice c: rightChoices){
+            answers.add(c.getId());
+        }
         return answers;
     }
 
     @RequestMapping(value = "/edit/{quesId}", method = RequestMethod.GET)
-    public QuestionWithAnswer getQuestionForEdit(@PathVariable("quesId") int quesId){
+    public Question getQuestionForEdit(@PathVariable("quesId") int quesId){
         return null;
     }
     @RequestMapping(value = "/edit", method = RequestMethod.POST)
-    public void editQuestionAnswer(QuestionWithAnswer question){
+    public void editQuestionAnswer(Question question){
 
     }
     @RequestMapping(value= "/confirmedit/{quesId}")
@@ -178,17 +180,17 @@ public class QuestionController {
     @PostMapping()
     @PreAuthorize("hasRole('ADMIN')")
     @Transactional
-    public void createQuestion(@RequestBody QuestionWithAnswer question){
+    public void createQuestion(@RequestBody Question question){
         insertQuestionWithAnswer(question, question.getBankId());
     }
     @PostMapping("/create")
     @PreAuthorize("hasRole('ADMIN')")
     @Transactional
     public void createBank(MultipartFile file, String bankname) throws IOException, InvalidFormatException {
-        List<QuestionWithAnswer> qlist = questionService.parse(file.getInputStream());
+        List<Question> qlist = questionService.parse(file.getInputStream());
         QuestionBank bank = new QuestionBank(bankname);
         questionBankDAO.createBank(bank);
-        for(QuestionWithAnswer q : qlist){
+        for(Question q : qlist){
             insertQuestionWithAnswer(q, bank.getId());
         }
     }
@@ -196,13 +198,11 @@ public class QuestionController {
         if(q == null){
             return null;
         }
-        List<Integer> choiceIds = new ArrayList<Integer>();
-        choiceIds.addAll(q.getRightChoices());
-        choiceIds.addAll(q.getWrongChoices());
-        List<Choice> choices = new ArrayList<Choice>();
-        for(int id : choiceIds){
-            Choice choice = questionDAO.getChoiceById(id);
-            choices.add(choice);
+        List<Choice> choices = new ArrayList<>();
+        choices.addAll(q.getRightChoices());
+        choices.addAll(q.getWrongChoices());
+        for(Choice c : choices){
+            c.setRight(null);
         }
         Collections.shuffle(choices);   //打乱顺序
 
@@ -214,25 +214,17 @@ public class QuestionController {
         result.setEditFlag(q.getEditFlag());
         return result;
     }
-    private void insertQuestionWithAnswer(QuestionWithAnswer question, int bankId){
-        Question q = new Question();
-        q.setQuestion(question.getQuestion());
-        q.setBankId(bankId);
-        q.setEditFlag("0");
-        q.setType(question.getType());
-        List<Integer> choiceIds = new ArrayList<>();
-        for (Choice right : question.getRightChoices()){
-            questionDAO.insertChoice(right);
-            choiceIds.add(right.getId());
+    private void insertQuestionWithAnswer(Question question, int bankId){
+        question.setBankId(bankId);
+        question.setEditFlag("0");
+        questionDAO.createQuestion(question);
+        List<Choice> choices = new ArrayList<>();
+        choices.addAll(question.getRightChoices());
+        choices.addAll(question.getWrongChoices());
+        for(Choice c: choices){
+            c.setQuestionId(question.getId());
+            questionDAO.insertChoice(c);
         }
-        q.setRightChoices(choiceIds);
-        choiceIds = new ArrayList<>();
-        for (Choice wrong : question.getWrongChoices()){
-            questionDAO.insertChoice(wrong);
-            choiceIds.add(wrong.getId());
-        }
-        q.setWrongChoices(choiceIds);
-        questionDAO.createQuestion(q);
     }
 }
 

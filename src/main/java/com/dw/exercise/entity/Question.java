@@ -5,8 +5,8 @@ import java.util.List;
 public class Question {
     private int id;
     private String question;
-    private List<Integer> rightChoices;
-    private List<Integer> wrongChoices;
+    private List<Choice> rightChoices;
+    private List<Choice> wrongChoices;
     private String type;
     private String editFlag;
     private int bankId;
@@ -27,19 +27,19 @@ public class Question {
         this.question = question;
     }
 
-    public List<Integer> getRightChoices() {
+    public List<Choice> getRightChoices() {
         return rightChoices;
     }
 
-    public void setRightChoices(List<Integer> rightChoices) {
+    public void setRightChoices(List<Choice> rightChoices) {
         this.rightChoices = rightChoices;
     }
 
-    public List<Integer> getWrongChoices() {
+    public List<Choice> getWrongChoices() {
         return wrongChoices;
     }
 
-    public void setWrongChoices(List<Integer> wrongChoices) {
+    public void setWrongChoices(List<Choice> wrongChoices) {
         this.wrongChoices = wrongChoices;
     }
 

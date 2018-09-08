@@ -5,34 +5,31 @@
     <resultMap id="questionMap" type="Question">
         <id column="id" property="id" jdbcType="INTEGER"/>
         <result column="question" property="question" jdbcType="VARCHAR"/>
-        <result column="right_choices" property="rightChoices" jdbcType="VARCHAR"
-                typeHandler="com.dw.util.mybatis.handler.IntegerListTypeHandler"/>
-        <result column="wrong_choices" property="wrongChoices" jdbcType="VARCHAR"
-                typeHandler="com.dw.util.mybatis.handler.IntegerListTypeHandler"/>
         <result column="type" property="type" jdbcType="VARCHAR"/>
         <result column="edit_flag" property="editFlag" jdbcType="VARCHAR"/>
         <result column="bank_id" property="bankId" jdbcType="INTEGER"/>
+        <collection property="rightChoices" javaType="ArrayList" ofType="Choice" column="id" select="selectRightChoices"/>
+        <collection property="wrongChoices" javaType="ArrayList" ofType="Choice" column="id" select="selectWrongChoices"/>
     </resultMap>
     <insert id="createQuestion" useGeneratedKeys="true" keyProperty="id">
-        insert into question (question, right_choices, wrong_choices, type, edit_flag, bank_id)
-        values(#{question},
-        #{rightChoices, typeHandler=com.dw.util.mybatis.handler.IntegerListTypeHandler},
-        #{wrongChoices, typeHandler=com.dw.util.mybatis.handler.IntegerListTypeHandler}, #{type}, #{editFlag}, #{bankId})
+        insert into question (question,  type, edit_flag, bank_id)
+        values(#{question}, #{type}, #{editFlag}, #{bankId})
     </insert>
-    <insert id="insertChoice" useGeneratedKeys="true" keyProperty="id">
-        insert into choice(text) values(#{text})
+    <insert id="insertChoice" useGeneratedKeys="true" keyProperty="id" parameterType="Choice">
+        insert into choice(text, question_id, is_right) values(#{text}, #{questionId}, #{right})
     </insert>
+
     <select id="getNextQuestionInBankId" resultMap="questionMap">
-        select id, question, right_choices, wrong_choices,type, edit_flag, bank_id
+        select id, question,type, edit_flag, bank_id
         from question where bank_id = #{bankId} and id > #{id} order by id asc limit 1
     </select>
     <select id="getNextQuestionInWrongCollection" resultMap="questionMap">
-        select id, question, right_choices, wrong_choices, type, edit_flag, bank_id from question
+        select id, question,  type, edit_flag, bank_id from question
           where id in (select question_id from wrong_collection where user_id = #{arg2} and bank_id = #{arg0})
           and id > #{arg1} order by id asc limit 1
     </select>
     <select id="getQuestionRandomlyInBankId" resultMap="questionMap">
-        select t1.id, question, right_choices, wrong_choices, type, edit_flag, bank_id from question t1
+        select t1.id, question,  type, edit_flag, bank_id from question t1
         join
         (SELECT ROUND(RAND() * ((SELECT MAX(id) FROM question where bank_id = #{bankId})-
         (SELECT MIN(id) FROM question  where bank_id = #{bankId}))+
@@ -40,12 +37,18 @@
         where t1.id >= t2.id and t1.bank_id = #{bankId} ORDER BY t1.id LIMIT 1;
     </select>
     <select id="getQuestionById" resultMap="questionMap">
-      select id, question, right_choices, wrong_choices,type, edit_flag, bank_id from question where id = #{id}
+      select id, question, type, edit_flag, bank_id from question where id = #{id}
     </select>
     <select id="getChoiceById" resultType="Choice">
-        select id, text from choice where id = #{id}
+        select id, text, question_id, is_right from choice where id = #{id}
     </select>
     <select id="countQuestionWithBankAndType" resultType="java.lang.Integer">
         select count(*) from question where bank_id = #{bankId} and type=#{type}
+    </select>
+    <select id="selectRightChoices" parameterType="java.lang.Integer" resultType="Choice">
+        select id, text, question_id, is_right from choice where question_id = #{id} and is_right=1
+    </select>
+    <select id="selectWrongChoices" parameterType="java.lang.Integer" resultType="Choice">
+        select id, text, question_id, is_right from choice where question_id = #{id} and is_right=0
     </select>
 </mapper>

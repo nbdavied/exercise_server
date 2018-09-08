@@ -2,14 +2,16 @@ package com.dw.exercise.entity;
 
 
 public class Choice{
-    private int id;
+    private Integer id;
     private String text;
+    private Integer questionId;
+    private Boolean right;
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -19,5 +21,21 @@ public class Choice{
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    public Integer getQuestionId() {
+        return questionId;
+    }
+
+    public void setQuestionId(Integer questionId) {
+        this.questionId = questionId;
+    }
+
+    public Boolean isRight() {
+        return right;
+    }
+
+    public void setRight(Boolean right) {
+        this.right = right;
     }
 }
