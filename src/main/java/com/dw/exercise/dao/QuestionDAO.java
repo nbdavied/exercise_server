@@ -4,6 +4,8 @@ import com.dw.exercise.entity.Choice;
 import com.dw.exercise.entity.Question;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.Map;
+
 @Mapper
 public interface QuestionDAO {
     int createQuestion(Question q);
@@ -18,4 +20,7 @@ public interface QuestionDAO {
     Question getQuestionById(int id);
 
     Choice getChoiceById(int id);
+
+    Integer countQuestionWithBankAndType(Question q);
+
 }

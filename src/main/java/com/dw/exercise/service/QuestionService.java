@@ -1,7 +1,7 @@
 package com.dw.exercise.service;
 
 import com.dw.exercise.entity.Choice;
-import com.dw.exercise.vo.QuestionWithAnswer;
+import com.dw.exercise.entity.Question;
 import com.dw.util.PoiUtil;
 import com.dw.util.StringUtil;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
@@ -16,39 +16,39 @@ import java.util.List;
 
 @Service
 public class QuestionService {
-    public List<QuestionWithAnswer> parseExcel(Workbook wb){
+    public List<Question> parseExcel(Workbook wb){
         Sheet singleSheet = wb.getSheet("单选题");
-        List<QuestionWithAnswer> list = new ArrayList<>();
+        List<Question> list = new ArrayList<>();
         for(Row row : singleSheet){
-            QuestionWithAnswer q = parseSingleMultiRow(row);
+            Question q = parseSingleMultiRow(row);
             list.add(q);
         }
         Sheet multiSheet = wb.getSheet("多选题");
         for(Row row : multiSheet){
-            QuestionWithAnswer q = parseSingleMultiRow(row);
+            Question q = parseSingleMultiRow(row);
             list.add(q);
         }
         Sheet tfSheet = wb.getSheet("判断题");
         for(Row row : tfSheet){
-            QuestionWithAnswer q = parseTfRow(row);
+            Question q = parseTfRow(row);
             list.add(q);
         }
 
         return list;
     }
 
-    public List<QuestionWithAnswer> parseDoc(){
+    public List<Question> parseDoc(){
         return null;
     }
 
-    public List<QuestionWithAnswer> parse(File file){
+    public List<Question> parse(File file){
         return null;
     }
-    public List<QuestionWithAnswer> parse(InputStream is) throws IOException, InvalidFormatException {
+    public List<Question> parse(InputStream is) throws IOException, InvalidFormatException {
         Workbook wb = WorkbookFactory.create(is);
         return parseExcel(wb);
     }
-    private QuestionWithAnswer parseSingleMultiRow(Row row){
+    private Question parseSingleMultiRow(Row row){
         final String question = PoiUtil.getString(row.getCell(0));
         String answerString = PoiUtil.getString(row.getCell(1));
         int[] rightIndex = parseAnswer(answerString);
@@ -58,6 +58,7 @@ public class QuestionService {
             Choice choice = new Choice();
             String text = PoiUtil.getString(row.getCell(index + 2));
             choice.setText(text);
+            choice.setRight(true);
             rightChoices.add(choice);
         }
         final List<Choice> wrongChoices = new ArrayList<>();
@@ -73,10 +74,11 @@ public class QuestionService {
                 }
                 Choice choice = new Choice();
                 choice.setText(text);
+                choice.setRight(false);
                 wrongChoices.add(choice);
             }
         }
-        QuestionWithAnswer q = new QuestionWithAnswer();
+        Question q = new Question();
         q.setQuestion(question);
         q.setType(type);
         q.setEditFlag("0");
@@ -84,14 +86,16 @@ public class QuestionService {
         q.setWrongChoices(wrongChoices);
         return q;
     }
-    private QuestionWithAnswer parseTfRow(Row row) {
-        QuestionWithAnswer q = new QuestionWithAnswer();
+    private Question parseTfRow(Row row) {
+        Question q = new Question();
         q.setQuestion(PoiUtil.getString(row.getCell(0)));
         List<Choice> rightChoices = new ArrayList<>();
         Choice right = new Choice();
+        right.setRight(true);
         rightChoices.add(right);
         List<Choice> wrongChoices = new ArrayList<>();
         Choice wrong = new Choice();
+        wrong.setRight(false);
         wrongChoices.add(wrong);
         q.setRightChoices(rightChoices);
         q.setWrongChoices(wrongChoices);

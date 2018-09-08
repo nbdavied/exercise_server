@@ -2,6 +2,7 @@ package com.dw.exercise.security;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -29,23 +30,25 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
             chain.doFilter(request, response);
             return;
         }
-        UsernamePasswordAuthenticationToken authentication = getAuthentication(request);
+        AppAuthToken authentication = getAuthentication(request);
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         chain.doFilter(request, response);
     }
 
-    private UsernamePasswordAuthenticationToken getAuthentication(HttpServletRequest request) {
+    private AppAuthToken getAuthentication(HttpServletRequest request) {
         String token = request.getHeader(HEADER_STRING);
         token = token.replace(TOKEN_PREFIX, "");
         if(token != null){
-            String username = JWT.require(Algorithm.HMAC512(SECRET.getBytes()))
+            DecodedJWT jwt = JWT.require(Algorithm.HMAC512(SECRET.getBytes()))
                     .build()
-                    .verify(token)
-                    .getSubject();
+                    .verify(token);
+            String username = jwt.getSubject();
+            Integer userId = jwt.getClaim("uid").asInt();
+
             if(username != null){
                 JwtUser user = (JwtUser) userDetailsService.loadUserByUsername(username);
-                return new UsernamePasswordAuthenticationToken(username, null, user.getAuthorities());
+                return new AppAuthToken(username, null, userId, user.getAuthorities());
             }
             return null;
         }

@@ -1,7 +1,9 @@
 package com.dw.util;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 public class StringUtil {
@@ -41,5 +43,15 @@ public class StringUtil {
             return true;
         }
         return false;
+    }
+
+    /**
+     * 获取当日日期
+     * @return yyyyMMdd
+     */
+    public static String today(){
+        SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
+        Date date = new Date();
+        return format.format(date);
     }
 }
