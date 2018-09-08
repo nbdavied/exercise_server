@@ -57,4 +57,7 @@
     <delete id="deleteQuestionsInBank" parameterType="int">
         delete from question where bank_id = #{bankId}
     </delete>
+    <select id="getQuestionIdsWithBankAndType" resultType="java.lang.Integer">
+        select id from question where bank_id = #{bankId} and type=#{type}
+    </select>
 </mapper>

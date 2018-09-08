@@ -4,6 +4,7 @@ import com.dw.exercise.entity.Choice;
 import com.dw.exercise.entity.Question;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.List;
 import java.util.Map;
 
 @Mapper
@@ -31,4 +32,11 @@ public interface QuestionDAO {
     int deleteChoicesInBank(int bankId);
 
     int deleteQuestionsInBank(int bankId);
+
+    /**
+     * 获得题库中指定题型的所有题目id
+     * @param q 传入bankId,type
+     * @return
+     */
+    List<Integer> getQuestionIdsWithBankAndType(Question q);
 }

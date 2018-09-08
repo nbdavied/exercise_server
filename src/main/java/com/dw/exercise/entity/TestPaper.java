@@ -2,6 +2,7 @@ package com.dw.exercise.entity;
 
 public class TestPaper {
     private Integer id;
+    private Integer bankId;
     private String paperNo;
     private Integer userId;
     private String status;
@@ -19,6 +20,14 @@ public class TestPaper {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public Integer getBankId() {
+        return bankId;
+    }
+
+    public void setBankId(Integer bankId) {
+        this.bankId = bankId;
     }
 
     public String getPaperNo() {
