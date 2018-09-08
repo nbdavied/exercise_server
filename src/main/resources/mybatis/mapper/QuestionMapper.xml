@@ -46,6 +46,6 @@
         select id, text from choice where id = #{id}
     </select>
     <select id="countQuestionWithBankAndType" resultType="java.lang.Integer">
-
+        select count(*) from question where bank_id = #{bankId} and type=#{type}
     </select>
 </mapper>
