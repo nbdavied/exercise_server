@@ -9,6 +9,6 @@
         insert question_bank (name, is_delete) values(#{name}, 0)
     </insert>
     <delete id="deleteBank" parameterType="int">
-        update bank set is_delete = 1 where id = #{id}
+        update question_bank set is_delete = 1 where id = #{id}
     </delete>
 </mapper>

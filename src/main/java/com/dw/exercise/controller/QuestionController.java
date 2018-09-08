@@ -17,9 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 @RestController
 @RequestMapping("/question")
@@ -60,7 +58,11 @@ public class QuestionController {
         }
         Question question;
         if(onlyWrong){
-            question = questionDAO.getNextQuestionInWrongCollection(bankId, last, user.getId());
+            Map<String, Object> map = new HashMap<>();
+            map.put("bankId", bankId);
+            map.put("lastId", last);
+            map.put("userId", user.getId());
+            question = questionDAO.getNextQuestionInWrongCollection(map);
         }else {
             question = new Question();
             question.setBankId(bankId);

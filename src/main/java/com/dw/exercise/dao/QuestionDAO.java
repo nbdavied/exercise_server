@@ -13,7 +13,12 @@ public interface QuestionDAO {
 
     Question getNextQuestionInBankId(Question q);
 
-    Question getNextQuestionInWrongCollection(Integer bankId, Integer lastId, Integer userId);
+    /**
+     * 从错题记录中选取下一题
+     * @param map key: bankId, lastId, userId
+     * @return
+     */
+    Question getNextQuestionInWrongCollection(Map<String, Object> map);
 
     Question getQuestionRandomlyInBankId(int bankId);
 

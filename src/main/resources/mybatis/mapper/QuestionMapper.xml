@@ -23,10 +23,10 @@
         select id, question,type, edit_flag, bank_id
         from question where bank_id = #{bankId} and id > #{id} order by id asc limit 1
     </select>
-    <select id="getNextQuestionInWrongCollection" resultMap="questionMap">
+    <select id="getNextQuestionInWrongCollection" resultMap="questionMap" parameterType="map">
         select id, question,  type, edit_flag, bank_id from question
-          where id in (select question_id from wrong_collection where user_id = #{arg2} and bank_id = #{arg0})
-          and id > #{arg1} order by id asc limit 1
+          where id in (select question_id from wrong_collection where user_id = #{userId} and bank_id = #{bankId})
+          and id > #{lastId} order by id asc limit 1
     </select>
     <select id="getQuestionRandomlyInBankId" resultMap="questionMap">
         select t1.id, question,  type, edit_flag, bank_id from question t1
