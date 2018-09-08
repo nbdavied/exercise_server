@@ -10,4 +10,6 @@ public interface WrongCollectionDAO {
     WrongCollection randomlySelect(WrongCollection collection);
 
     int deleteWrongCollection(WrongCollection collection);
+
+    int deleteInBank(int bankId);
 }

@@ -19,4 +19,7 @@
     <delete id="deleteWrongCollection">
         delete from wrong_collection where user_id = #{userId} and question_id = #{questionId}
     </delete>
+    <delete id="deleteInBank" parameterType="int">
+        delete from wrong_collection where bank_id = #{bankId}
+    </delete>
 </mapper>

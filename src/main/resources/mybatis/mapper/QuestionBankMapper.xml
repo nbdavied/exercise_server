@@ -3,9 +3,12 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.dw.exercise.dao.QuestionBankDAO">
     <select id="getBanks" resultType="QuestionBank">
-        select id, name from question_bank
+        select id, name from question_bank where is_delete = 0
     </select>
     <insert id="createBank" useGeneratedKeys="true" keyProperty="id">
-        insert question_bank (name) values(#{name})
+        insert question_bank (name, is_delete) values(#{name}, 0)
     </insert>
+    <delete id="deleteBank" parameterType="int">
+        update bank set is_delete = 1 where id = #{id}
+    </delete>
 </mapper>

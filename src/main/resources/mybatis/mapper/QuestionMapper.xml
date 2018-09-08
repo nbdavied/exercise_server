@@ -51,4 +51,10 @@
     <select id="selectWrongChoices" parameterType="java.lang.Integer" resultType="Choice">
         select id, text, question_id, is_right from choice where question_id = #{id} and is_right=0
     </select>
+    <delete id="deleteChoicesInBank" parameterType="java.lang.Integer">
+        delete from choice where question_id in(select id from question where bank_id = #{bankId})
+    </delete>
+    <delete id="deleteQuestionsInBank" parameterType="int">
+        delete from question where bank_id = #{bankId}
+    </delete>
 </mapper>

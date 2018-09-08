@@ -194,6 +194,15 @@ public class QuestionController {
             insertQuestionWithAnswer(q, bank.getId());
         }
     }
+    @DeleteMapping("/bank/{bankId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Transactional
+    public void deleteQuestionOfBank(@PathVariable Integer bankId){
+        wrongCollectionDAO.deleteInBank(bankId);
+        questionDAO.deleteChoicesInBank(bankId);
+        questionDAO.deleteQuestionsInBank(bankId);
+        questionBankDAO.deleteBank(bankId);
+    }
     private QuestionNoAnswer prepareQuestion(@Nullable Question q){
         if(q == null){
             return null;

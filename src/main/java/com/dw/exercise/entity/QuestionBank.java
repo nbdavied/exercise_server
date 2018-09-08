@@ -1,8 +1,10 @@
 package com.dw.exercise.entity;
 
+
 public class QuestionBank {
     private int id;
     private String name;
+    private Boolean delete;
 
     public QuestionBank() {
     }
@@ -25,5 +27,13 @@ public class QuestionBank {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Boolean getDelete() {
+        return delete;
+    }
+
+    public void setDelete(Boolean delete) {
+        this.delete = delete;
     }
 }

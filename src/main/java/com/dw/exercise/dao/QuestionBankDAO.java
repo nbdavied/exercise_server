@@ -9,4 +9,5 @@ import java.util.List;
 public interface QuestionBankDAO {
     List<QuestionBank> getBanks();
     int createBank(QuestionBank bank);
+    int deleteBank(int id);
 }

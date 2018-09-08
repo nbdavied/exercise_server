@@ -23,4 +23,7 @@ public interface QuestionDAO {
 
     Integer countQuestionWithBankAndType(Question q);
 
+    int deleteChoicesInBank(int bankId);
+
+    int deleteQuestionsInBank(int bankId);
 }
