@@ -37,9 +37,12 @@ public class PaperController {
         param.put("date", StringUtil.today());
         param.put("userId", userId);
         String maxNo = paperDAO.getMaxPaperNoOfDate(param);
-        Integer no = Integer.parseInt(maxNo.substring(8));
+        Integer no = 0;
+        if(maxNo != null) {
+            no = Integer.parseInt(maxNo.substring(8));
+        }
         no++;
-        maxNo = String.format("%s%2d", StringUtil.today(), no);
+        maxNo = String.format("%s%02d", StringUtil.today(), no);
         paper.setPaperNo(maxNo);
         paperDAO.createPaper(paper);
 
@@ -64,10 +67,12 @@ public class PaperController {
         ids.addAll(tIds.subList(0, paper.gettNum()));
         //插入试卷题目关联
         List<PaperQuestion> questionList = new ArrayList<>();
+        int i = 1;
         for (Integer id: ids){
             PaperQuestion question = new PaperQuestion();
             question.setPaperId(paper.getId());
             question.setQuestionId(id);
+            question.setNo(i ++);
             questionList.add(question);
         }
         paperDAO.batchInsertPaperQuestion(questionList);

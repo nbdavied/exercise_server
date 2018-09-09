@@ -2,10 +2,12 @@ package com.dw.exercise.dao;
 
 import com.dw.exercise.entity.PaperQuestion;
 import com.dw.exercise.entity.TestPaper;
+import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
 import java.util.Map;
 
+@Mapper
 public interface PaperDAO {
     int createPaper(TestPaper paper);
 

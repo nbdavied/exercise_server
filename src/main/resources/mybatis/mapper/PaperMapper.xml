@@ -3,16 +3,16 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.dw.exercise.dao.PaperDAO">
     <insert id="createPaper" useGeneratedKeys="true" keyProperty="id">
-        insert into test_paper(paper_no, user_id, status, s_num, m_num, t_num, s_score, m_score, t_score, total_score)
-        values(#{paperNo}, #{userId}, #{status}, #{sNum}, #{mNum}, #{tNum}, #{sScore}, #{mScore}, #{tScore}, #{totalScore})
+        insert into test_paper(bank_id, paper_no, user_id, status, s_num, m_num, t_num, s_score, m_score, t_score, total_score)
+        values(#{bankId}, #{paperNo}, #{userId}, #{status}, #{sNum}, #{mNum}, #{tNum}, #{sScore}, #{mScore}, #{tScore}, #{totalScore})
     </insert>
-    <select id="getMaxPaperNoOfDate" parameterType="map">
+    <select id="getMaxPaperNoOfDate" parameterType="map" resultType="java.lang.String">
         select max(paper_no) from test_paper where user_id = #{userId} and substr(paper_no, 1, 8) = #{date}
     </select>
     <insert id="batchInsertPaperQuestion" parameterType="java.util.List">
         insert into paper_question(paper_id, question_id, no, selected) values
         <foreach collection="list" item="item" separator="," index="index">
-            (#{item.paperId}, #{item.questionId}, #{no}, #{index})
+            (#{item.paperId}, #{item.questionId}, #{item.no}, #{item.selected})
         </foreach>
     </insert>
 </mapper>
