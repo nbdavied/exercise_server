@@ -7,12 +7,10 @@ import com.dw.exercise.entity.Question;
 import com.dw.exercise.entity.TestPaper;
 import com.dw.exercise.security.AppAuthToken;
 import com.dw.util.StringUtil;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.text.Format;
@@ -20,6 +18,7 @@ import java.util.*;
 
 @RestController
 @RequestMapping("/paper")
+@PreAuthorize("hasRole('USER')")
 public class PaperController {
     @Resource
     private PaperDAO paperDAO;
@@ -76,5 +75,11 @@ public class PaperController {
             questionList.add(question);
         }
         paperDAO.batchInsertPaperQuestion(questionList);
+    }
+    @GetMapping()
+    public List<TestPaper> getPaperList(){
+        Integer userId = ((AppAuthToken) SecurityContextHolder.getContext().getAuthentication()).getUserId();
+        List<TestPaper> list = paperDAO.getPaperOfUser(userId);
+        return list;
     }
 }

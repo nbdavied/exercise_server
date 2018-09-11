@@ -24,4 +24,5 @@ public interface PaperDAO {
      * @return
      */
     int batchInsertPaperQuestion(List<PaperQuestion> paperQuestions);
+    List<TestPaper> getPaperOfUser(Integer userId);
 }

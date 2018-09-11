@@ -2,6 +2,21 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.dw.exercise.dao.PaperDAO">
+    <resultMap id="paper" type="TestPaper">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="bank_id" property="bankId" jdbcType="INTEGER"/>
+        <result column="paper_no" property="paperNo" jdbcType="VARCHAR"/>
+        <result column="user_id" property="userId" jdbcType="INTEGER"/>
+        <result column="status" property="status" jdbcType="VARCHAR"/>
+        <result column="s_num" property="sNum" jdbcType="INTEGER"/>
+        <result column="m_num" property="mNum" jdbcType="INTEGER"/>
+        <result column="t_num" property="tNum" jdbcType="INTEGER"/>
+        <result column="s_score" property="sScore" jdbcType="INTEGER"/>
+        <result column="m_score" property="mScore" jdbcType="INTEGER"/>
+        <result column="t_score" property="tScore" jdbcType="INTEGER"/>
+        <result column="total_score" property="totalScore" jdbcType="INTEGER"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+    </resultMap>
     <insert id="createPaper" useGeneratedKeys="true" keyProperty="id">
         insert into test_paper(bank_id, paper_no, user_id, status, s_num, m_num, t_num, s_score, m_score, t_score, total_score)
         values(#{bankId}, #{paperNo}, #{userId}, #{status}, #{sNum}, #{mNum}, #{tNum}, #{sScore}, #{mScore}, #{tScore}, #{totalScore})
@@ -15,4 +30,8 @@
             (#{item.paperId}, #{item.questionId}, #{item.no}, #{item.selected})
         </foreach>
     </insert>
+    <select id="getPaperOfUser" parameterType="java.lang.Integer" resultMap="paper">
+        select a.id, bank_id, paper_no, user_id, status, s_num, m_num, t_num, s_score, m_score, t_score, total_score, b.name
+        from test_paper a left join question_bank b on a.bank_id = b.id where user_id = #{userId}
+    </select>
 </mapper>
