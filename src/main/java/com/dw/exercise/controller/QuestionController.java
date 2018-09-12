@@ -152,7 +152,18 @@ public class QuestionController {
         }
         return answers;
     }
-
+    @GetMapping("")
+    public List<QuestionNoAnswer> getQuestionsInPaper(Integer paperId, String type){
+        Map<String, Object> map = new HashMap<>();
+        map.put("paperId", paperId);
+        map.put("type", type);
+        List<Question> list = questionDAO.getQuestionsInPaper(map);
+        List<QuestionNoAnswer> result = new ArrayList<>();
+        for(Question q : list){
+            result.add(prepareQuestion(q));
+        }
+        return result;
+    }
     @RequestMapping(value = "/edit/{quesId}", method = RequestMethod.GET)
     public Question getQuestionForEdit(@PathVariable("quesId") int quesId){
         return null;
@@ -215,8 +226,9 @@ public class QuestionController {
         for(Choice c : choices){
             c.setRight(null);
         }
-        Collections.shuffle(choices);   //打乱顺序
-
+        //if(!"t".equals(q.getType())) {
+            Collections.shuffle(choices);   //打乱顺序
+        //}
         QuestionNoAnswer result = new QuestionNoAnswer();
         result.setId(q.getId());
         result.setQuestion(q.getQuestion());

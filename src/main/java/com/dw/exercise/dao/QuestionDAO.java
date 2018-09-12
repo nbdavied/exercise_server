@@ -39,4 +39,11 @@ public interface QuestionDAO {
      * @return
      */
     List<Integer> getQuestionIdsWithBankAndType(Question q);
+
+    /**
+     * 获取指定试卷的指定题型题目
+     * @param map 传入paperId, type
+     * @return
+     */
+    List<Question> getQuestionsInPaper(Map<String, Object> map);
 }

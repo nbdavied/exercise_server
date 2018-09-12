@@ -60,4 +60,8 @@
     <select id="getQuestionIdsWithBankAndType" resultType="java.lang.Integer">
         select id from question where bank_id = #{bankId} and type=#{type}
     </select>
+    <select id="getQuestionsInPaper" resultMap="questionMap" parameterType="map">
+        select b.id, b.question, b.type, b.edit_flag, b.bank_id from paper_question a left join question b on a.question_id = b.id
+        where a.paper_id = #{paperId} and b.type = #{type}
+    </select>
 </mapper>

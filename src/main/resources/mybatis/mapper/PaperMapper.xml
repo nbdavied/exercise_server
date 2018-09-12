@@ -15,7 +15,7 @@
         <result column="m_score" property="mScore" jdbcType="INTEGER"/>
         <result column="t_score" property="tScore" jdbcType="INTEGER"/>
         <result column="total_score" property="totalScore" jdbcType="INTEGER"/>
-        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="name" property="bankName" jdbcType="VARCHAR"/>
     </resultMap>
     <insert id="createPaper" useGeneratedKeys="true" keyProperty="id">
         insert into test_paper(bank_id, paper_no, user_id, status, s_num, m_num, t_num, s_score, m_score, t_score, total_score)
