@@ -7,6 +7,7 @@ import com.dw.exercise.entity.*;
 import com.dw.exercise.dao.QuestionDAO;
 import com.dw.exercise.service.QuestionService;
 import com.dw.exercise.vo.QuestionNoAnswer;
+import com.dw.exercise.vo.QuestionNoAnswerWithSelected;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.springframework.lang.Nullable;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import javax.validation.constraints.Null;
 import java.io.IOException;
 import java.util.*;
 
@@ -153,14 +155,14 @@ public class QuestionController {
         return answers;
     }
     @GetMapping("")
-    public List<QuestionNoAnswer> getQuestionsInPaper(Integer paperId, String type){
+    public List<QuestionNoAnswerWithSelected> getQuestionsInPaper(Integer paperId, String type){
         Map<String, Object> map = new HashMap<>();
         map.put("paperId", paperId);
         map.put("type", type);
-        List<Question> list = questionDAO.getQuestionsInPaper(map);
-        List<QuestionNoAnswer> result = new ArrayList<>();
-        for(Question q : list){
-            result.add(prepareQuestion(q));
+        List<QuestionWithSelected> list = questionDAO.getQuestionsInPaper(map);
+        List<QuestionNoAnswerWithSelected> result = new ArrayList<>();
+        for(QuestionWithSelected q : list){
+            result.add(prepareQuestionWithSelected(q));
         }
         return result;
     }
@@ -235,6 +237,12 @@ public class QuestionController {
         result.setChoices(choices);
         result.setType(q.getType());
         result.setEditFlag(q.getEditFlag());
+        return result;
+    }
+    private QuestionNoAnswerWithSelected prepareQuestionWithSelected(@Nullable QuestionWithSelected q){
+        QuestionNoAnswer qna = prepareQuestion(q);
+        QuestionNoAnswerWithSelected result = new QuestionNoAnswerWithSelected(qna);
+        result.setSelected(q.getSelected());
         return result;
     }
     private void insertQuestionWithAnswer(Question question, int bankId){

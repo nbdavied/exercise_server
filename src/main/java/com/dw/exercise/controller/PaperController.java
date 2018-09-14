@@ -82,4 +82,8 @@ public class PaperController {
         List<TestPaper> list = paperDAO.getPaperOfUser(userId);
         return list;
     }
+    @PutMapping("/select")
+    public void saveSelected(@RequestBody PaperQuestion paperQuestion){
+        paperDAO.updateSelectedOfPaperQuestion(paperQuestion);
+    }
 }

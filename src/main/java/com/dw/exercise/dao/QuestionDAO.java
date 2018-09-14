@@ -2,6 +2,7 @@ package com.dw.exercise.dao;
 
 import com.dw.exercise.entity.Choice;
 import com.dw.exercise.entity.Question;
+import com.dw.exercise.entity.QuestionWithSelected;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -45,5 +46,5 @@ public interface QuestionDAO {
      * @param map 传入paperId, type
      * @return
      */
-    List<Question> getQuestionsInPaper(Map<String, Object> map);
+    List<QuestionWithSelected> getQuestionsInPaper(Map<String, Object> map);
 }

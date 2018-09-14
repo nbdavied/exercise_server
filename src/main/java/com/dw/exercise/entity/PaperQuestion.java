@@ -1,10 +1,12 @@
 package com.dw.exercise.entity;
 
+import java.util.List;
+
 public class PaperQuestion {
     private Integer paperId;
     private Integer questionId;
     private Integer no;
-    private String selected;
+    private List<Integer> selected;
 
     public Integer getPaperId() {
         return paperId;
@@ -30,11 +32,11 @@ public class PaperQuestion {
         this.no = no;
     }
 
-    public String getSelected() {
+    public List<Integer> getSelected() {
         return selected;
     }
 
-    public void setSelected(String selected) {
+    public void setSelected(List<Integer> selected) {
         this.selected = selected;
     }
 }
