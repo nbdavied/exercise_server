@@ -46,5 +46,7 @@ public interface QuestionDAO {
      * @param map 传入paperId, type
      * @return
      */
-    List<QuestionWithSelected> getQuestionsInPaper(Map<String, Object> map);
+    List<QuestionWithSelected> getQuestionsInPaperOfType(Map<String, Object> map);
+    List<QuestionWithSelected> getQuestionsInPaper(Integer paperId);
+    List<Question> getQuestionWithAnswerInPaper(Integer paperId);
 }

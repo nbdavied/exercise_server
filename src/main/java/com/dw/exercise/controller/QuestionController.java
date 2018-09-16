@@ -159,7 +159,7 @@ public class QuestionController {
         Map<String, Object> map = new HashMap<>();
         map.put("paperId", paperId);
         map.put("type", type);
-        List<QuestionWithSelected> list = questionDAO.getQuestionsInPaper(map);
+        List<QuestionWithSelected> list = questionDAO.getQuestionsInPaperOfType(map);
         List<QuestionNoAnswerWithSelected> result = new ArrayList<>();
         for(QuestionWithSelected q : list){
             result.add(prepareQuestionWithSelected(q));

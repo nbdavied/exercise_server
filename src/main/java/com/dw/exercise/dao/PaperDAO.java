@@ -27,4 +27,5 @@ public interface PaperDAO {
     List<TestPaper> getPaperOfUser(Integer userId);
 
     int updateSelectedOfPaperQuestion(PaperQuestion pq);
+    TestPaper getPaperInfoWithId(Integer id);
 }

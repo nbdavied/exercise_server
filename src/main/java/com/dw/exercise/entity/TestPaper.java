@@ -14,6 +14,8 @@ public class TestPaper {
     private Integer mScore;
     private Integer tScore;
     private Integer totalScore;
+    private Integer totalTime;
+    private Integer restTime;
 
     public Integer getId() {
         return id;
@@ -117,5 +119,21 @@ public class TestPaper {
 
     public void setTotalScore(Integer totalScore) {
         this.totalScore = totalScore;
+    }
+
+    public Integer getTotalTime() {
+        return totalTime;
+    }
+
+    public void setTotalTime(Integer totalTime) {
+        this.totalTime = totalTime;
+    }
+
+    public Integer getRestTime() {
+        return restTime;
+    }
+
+    public void setRestTime(Integer restTime) {
+        this.restTime = restTime;
     }
 }

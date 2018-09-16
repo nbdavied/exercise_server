@@ -16,10 +16,12 @@
         <result column="t_score" property="tScore" jdbcType="INTEGER"/>
         <result column="total_score" property="totalScore" jdbcType="INTEGER"/>
         <result column="name" property="bankName" jdbcType="VARCHAR"/>
+        <result column="total_time" property="totalTime" jdbcType="INTEGER"/>
+        <result column="rest_time" property="restTime" jdbcType="INTEGER"/>
     </resultMap>
     <insert id="createPaper" useGeneratedKeys="true" keyProperty="id">
-        insert into test_paper(bank_id, paper_no, user_id, status, s_num, m_num, t_num, s_score, m_score, t_score, total_score)
-        values(#{bankId}, #{paperNo}, #{userId}, #{status}, #{sNum}, #{mNum}, #{tNum}, #{sScore}, #{mScore}, #{tScore}, #{totalScore})
+        insert into test_paper(bank_id, paper_no, user_id, status, s_num, m_num, t_num, s_score, m_score, t_score, total_score, total_time, rest_time)
+        values(#{bankId}, #{paperNo}, #{userId}, #{status}, #{sNum}, #{mNum}, #{tNum}, #{sScore}, #{mScore}, #{tScore}, #{totalScore}, #{totalTime}, #{restTime})
     </insert>
     <select id="getMaxPaperNoOfDate" parameterType="map" resultType="java.lang.String">
         select max(paper_no) from test_paper where user_id = #{userId} and substr(paper_no, 1, 8) = #{date}
@@ -31,11 +33,15 @@
         </foreach>
     </insert>
     <select id="getPaperOfUser" parameterType="java.lang.Integer" resultMap="paper">
-        select a.id, bank_id, paper_no, user_id, status, s_num, m_num, t_num, s_score, m_score, t_score, total_score, b.name
+        select a.id, bank_id, paper_no, user_id, status, s_num, m_num, t_num, s_score, m_score, t_score, total_score, b.name, a.total_time, a.rest_time
         from test_paper a left join question_bank b on a.bank_id = b.id where user_id = #{userId}
     </select>
     <update id="updateSelectedOfPaperQuestion" parameterType="PaperQuestion">
-        update paper_question set selected=#{selected, typeHandler=com.dw.util.mybatis.handler.IntegerListTypeHandler}}
+        update paper_question set selected=#{selected, typeHandler=com.dw.util.mybatis.handler.IntegerListTypeHandler}
         where paper_id = #{paperId} and question_id = #{questionId}
     </update>
+    <select id="getPaperInfoWithId" resultMap="paper">
+        select id, bank_id, paper_no, user_id, status, s_num, m_num, t_num, s_score, m_score, t_score, total_score, total_time, rest_time
+        from test_paper where id = #{id}
+    </select>
 </mapper>

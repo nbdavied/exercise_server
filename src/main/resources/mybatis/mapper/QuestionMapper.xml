@@ -71,8 +71,16 @@
     <select id="getQuestionIdsWithBankAndType" resultType="java.lang.Integer">
         select id from question where bank_id = #{bankId} and type=#{type}
     </select>
-    <select id="getQuestionsInPaper" resultMap="questionSelectedMap" parameterType="map">
+    <select id="getQuestionsInPaperOfType" resultMap="questionSelectedMap" parameterType="map">
         select b.id, b.question, b.type, b.edit_flag, b.bank_id, a.selected from paper_question a left join question b on a.question_id = b.id
-        where a.paper_id = #{paperId} and b.type = #{type}
+        where a.paper_id = #{paperId} and b.type = #{type} order by b.id asc
+    </select>
+    <select id="getQuestionsInPaper" resultMap="questionSelectedMap">
+        select b.id, b.question, b.type, b.edit_flag, b.bank_id, a.selected from paper_question a left join question b on a.question_id = b.id
+        where a.paper_id = #{paperId} order by b.id asc
+    </select>
+    <select id="getQuestionWithAnswerInPaper" resultMap="questionMap">
+        select a.id, question,type, edit_flag, bank_id from question a right join paper_question b on a.id=b.question_id
+        where b.paper_id=#{paperId} order by a.id
     </select>
 </mapper>

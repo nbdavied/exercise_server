@@ -4,6 +4,7 @@ import com.dw.exercise.dao.PaperDAO;
 import com.dw.exercise.dao.QuestionDAO;
 import com.dw.exercise.entity.PaperQuestion;
 import com.dw.exercise.entity.Question;
+import com.dw.exercise.entity.QuestionWithSelected;
 import com.dw.exercise.entity.TestPaper;
 import com.dw.exercise.security.AppAuthToken;
 import com.dw.util.StringUtil;
@@ -31,6 +32,7 @@ public class PaperController {
         Integer userId = ((AppAuthToken) SecurityContextHolder.getContext().getAuthentication()).getUserId();
         paper.setUserId(userId);
         paper.setStatus("0");
+        paper.setRestTime(paper.getTotalTime());
         //设置试卷号
         Map<String, Object> param = new HashMap<>();
         param.put("date", StringUtil.today());
@@ -82,8 +84,25 @@ public class PaperController {
         List<TestPaper> list = paperDAO.getPaperOfUser(userId);
         return list;
     }
-    @PutMapping("/select")
+    @PostMapping("/select")
     public void saveSelected(@RequestBody PaperQuestion paperQuestion){
         paperDAO.updateSelectedOfPaperQuestion(paperQuestion);
+    }
+    @PostMapping("/finish")
+    public void finishPaper(Integer paperId){
+        TestPaper paper = paperDAO.getPaperInfoWithId(paperId);
+        List<QuestionWithSelected> selectList = questionDAO.getQuestionsInPaper(paperId);
+        List<Question> answerList = questionDAO.getQuestionWithAnswerInPaper(paperId);
+        if(selectList.size() != answerList.size()){
+            throw new RuntimeException("数据异常");
+        }
+        Iterator<QuestionWithSelected> selectIter = selectList.iterator();
+        Iterator<Question> answerIter = answerList.iterator();
+        while(selectIter.hasNext()){
+            QuestionWithSelected sel = selectIter.next();
+            Question ans = answerIter.next();
+            //TODO 批卷
+        }
+
     }
 }
