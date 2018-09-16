@@ -2,10 +2,7 @@ package com.dw.exercise.controller;
 
 import com.dw.exercise.dao.PaperDAO;
 import com.dw.exercise.dao.QuestionDAO;
-import com.dw.exercise.entity.PaperQuestion;
-import com.dw.exercise.entity.Question;
-import com.dw.exercise.entity.QuestionWithSelected;
-import com.dw.exercise.entity.TestPaper;
+import com.dw.exercise.entity.*;
 import com.dw.exercise.security.AppAuthToken;
 import com.dw.util.StringUtil;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -74,6 +71,7 @@ public class PaperController {
             question.setPaperId(paper.getId());
             question.setQuestionId(id);
             question.setNo(i ++);
+            question.setRight(false);
             questionList.add(question);
         }
         paperDAO.batchInsertPaperQuestion(questionList);
@@ -84,8 +82,27 @@ public class PaperController {
         List<TestPaper> list = paperDAO.getPaperOfUser(userId);
         return list;
     }
+
+    /**
+     * 更改选项
+     * 判断选择是否正确
+     * @param paperQuestion
+     */
     @PostMapping("/select")
     public void saveSelected(@RequestBody PaperQuestion paperQuestion){
+        Question question = questionDAO.getQuestionById(paperQuestion.getQuestionId());
+        paperQuestion.setRight(false);
+        if(paperQuestion.getSelected().size() > 0
+                && paperQuestion.getSelected().size() == question.getRightChoices().size()){
+            boolean bingo = true;
+            for(Choice rightChoice: question.getRightChoices()){
+                if(!paperQuestion.getSelected().contains(rightChoice.getId())){
+                    bingo = false;
+                    break;
+                }
+            }
+            paperQuestion.setRight(bingo);
+        }
         paperDAO.updateSelectedOfPaperQuestion(paperQuestion);
     }
     @PostMapping("/finish")

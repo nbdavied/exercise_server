@@ -7,6 +7,7 @@ public class PaperQuestion {
     private Integer questionId;
     private Integer no;
     private List<Integer> selected;
+    private Boolean right;
 
     public Integer getPaperId() {
         return paperId;
@@ -38,5 +39,13 @@ public class PaperQuestion {
 
     public void setSelected(List<Integer> selected) {
         this.selected = selected;
+    }
+
+    public Boolean isRight() {
+        return right;
+    }
+
+    public void setRight(Boolean right) {
+        this.right = right;
     }
 }

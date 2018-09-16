@@ -27,9 +27,9 @@
         select max(paper_no) from test_paper where user_id = #{userId} and substr(paper_no, 1, 8) = #{date}
     </select>
     <insert id="batchInsertPaperQuestion" parameterType="java.util.List">
-        insert into paper_question(paper_id, question_id, no, selected) values
+        insert into paper_question(paper_id, question_id, no, selected, is_right) values
         <foreach collection="list" item="item" separator="," index="index">
-            (#{item.paperId}, #{item.questionId}, #{item.no}, #{item.selected,typeHandler=com.dw.util.mybatis.handler.IntegerListTypeHandler})
+            (#{item.paperId}, #{item.questionId}, #{item.no}, #{item.selected,typeHandler=com.dw.util.mybatis.handler.IntegerListTypeHandler}, #{right})
         </foreach>
     </insert>
     <select id="getPaperOfUser" parameterType="java.lang.Integer" resultMap="paper">
@@ -37,7 +37,7 @@
         from test_paper a left join question_bank b on a.bank_id = b.id where user_id = #{userId}
     </select>
     <update id="updateSelectedOfPaperQuestion" parameterType="PaperQuestion">
-        update paper_question set selected=#{selected, typeHandler=com.dw.util.mybatis.handler.IntegerListTypeHandler}
+        update paper_question set selected=#{selected, typeHandler=com.dw.util.mybatis.handler.IntegerListTypeHandler}, is_right=#{right}
         where paper_id = #{paperId} and question_id = #{questionId}
     </update>
     <select id="getPaperInfoWithId" resultMap="paper">
