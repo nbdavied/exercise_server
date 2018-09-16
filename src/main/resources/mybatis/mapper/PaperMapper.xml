@@ -44,4 +44,9 @@
         select id, bank_id, paper_no, user_id, status, s_num, m_num, t_num, s_score, m_score, t_score, total_score, total_time, rest_time
         from test_paper where id = #{id}
     </select>
+    <select id="countRightQuestionInPaper" resultType="PaperQuestionCount">
+        SELECT b.type, count(*) as cnt FROM `paper_question` a left join question b on a.question_id = b.id
+        where a.paper_id = #{paperId} and a.is_right = 1
+        group by b.type
+    </select>
 </mapper>

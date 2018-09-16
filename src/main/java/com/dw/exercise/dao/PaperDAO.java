@@ -1,6 +1,7 @@
 package com.dw.exercise.dao;
 
 import com.dw.exercise.entity.PaperQuestion;
+import com.dw.exercise.entity.PaperQuestionCount;
 import com.dw.exercise.entity.TestPaper;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -28,4 +29,6 @@ public interface PaperDAO {
 
     int updateSelectedOfPaperQuestion(PaperQuestion pq);
     TestPaper getPaperInfoWithId(Integer id);
+
+    List<PaperQuestionCount> countRightQuestionInPaper(Integer paperId);
 }
