@@ -2,6 +2,7 @@ package com.dw.exercise.controller;
 
 import com.dw.exercise.dao.PaperDAO;
 import com.dw.exercise.dao.QuestionDAO;
+import com.dw.exercise.dao.TestResultDAO;
 import com.dw.exercise.entity.*;
 import com.dw.exercise.security.AppAuthToken;
 import com.dw.util.StringUtil;
@@ -22,6 +23,8 @@ public class PaperController {
     private PaperDAO paperDAO;
     @Resource
     private QuestionDAO questionDAO;
+    @Resource
+    private TestResultDAO resultDAO;
 
     @PostMapping("")
     @Transactional
@@ -82,7 +85,10 @@ public class PaperController {
         List<TestPaper> list = paperDAO.getPaperOfUser(userId);
         return list;
     }
+    @PostMapping("/start")
+    public void startPaper(@RequestBody Integer PaperId){
 
+    }
     /**
      * 更改选项
      * 判断选择是否正确
@@ -106,20 +112,38 @@ public class PaperController {
         paperDAO.updateSelectedOfPaperQuestion(paperQuestion);
     }
     @PostMapping("/finish")
-    public void finishPaper(Integer paperId){
-        TestPaper paper = paperDAO.getPaperInfoWithId(paperId);
-        List<QuestionWithSelected> selectList = questionDAO.getQuestionsInPaper(paperId);
-        List<Question> answerList = questionDAO.getQuestionWithAnswerInPaper(paperId);
-        if(selectList.size() != answerList.size()){
-            throw new RuntimeException("数据异常");
+    @Transactional
+    public Integer finishPaper(@RequestBody TestPaper paper){
+        int paperId = paper.getId();
+        paper = paperDAO.getPaperInfoWithId(paperId);
+        List<PaperQuestionCount> count = paperDAO.countRightQuestionInPaper(paperId);
+        int sRight = 0, mRight= 0, tRight = 0;
+        for(PaperQuestionCount c : count){
+            if("s".equals(c.getType())){
+                sRight = c.getCnt();
+            }else if("m".equals(c.getType())){
+                mRight = c.getCnt();
+            }else if("t".equals(c.getType())){
+                tRight = c.getCnt();
+            }
         }
-        Iterator<QuestionWithSelected> selectIter = selectList.iterator();
-        Iterator<Question> answerIter = answerList.iterator();
-        while(selectIter.hasNext()){
-            QuestionWithSelected sel = selectIter.next();
-            Question ans = answerIter.next();
-            //TODO 批卷
-        }
-
+        int score = paper.getsScore() * sRight
+                + paper.getmScore() * mRight
+                + paper.gettScore() * tRight;
+        TestResult result = new TestResult();
+        result.setPaperId(paperId);
+        result.setSubTime(new Date());
+        result.setsRight(sRight);
+        result.settRight(tRight);
+        result.setmRight(mRight);
+        result.setsTotal(paper.getsNum());
+        result.setmTotal(paper.getmNum());
+        result.settTotal(paper.gettNum());
+        result.setScore(score);
+        resultDAO.insert(result);
+        paper.setStatus("2");
+        paper.setRestTime(paper.getTotalTime());
+        paperDAO.updateById(paper);
+        return result.getId();
     }
 }

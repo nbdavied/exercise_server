@@ -49,4 +49,7 @@
         where a.paper_id = #{paperId} and a.is_right = 1
         group by b.type
     </select>
+    <update id="updateById" >
+        update test_paper set status = #{status}, rest_time = #{restTime} where id = #{id}
+    </update>
 </mapper>

@@ -31,4 +31,6 @@ public interface PaperDAO {
     TestPaper getPaperInfoWithId(Integer id);
 
     List<PaperQuestionCount> countRightQuestionInPaper(Integer paperId);
+
+    int updateById(TestPaper paper);
 }

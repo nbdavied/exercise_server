@@ -8,6 +8,7 @@ import com.dw.exercise.dao.QuestionDAO;
 import com.dw.exercise.service.QuestionService;
 import com.dw.exercise.vo.QuestionNoAnswer;
 import com.dw.exercise.vo.QuestionNoAnswerWithSelected;
+import com.dw.util.QuestionAnalyzer;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.springframework.lang.Nullable;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -202,7 +203,19 @@ public class QuestionController {
     @PreAuthorize("hasRole('ADMIN')")
     @Transactional
     public void createBank(MultipartFile file, String bankname) throws IOException, InvalidFormatException {
-        List<Question> qlist = questionService.parse(file.getInputStream());
+        List<Question> qlist = null;
+        if(file.getOriginalFilename().endsWith("docx")){
+            QuestionAnalyzer analyzer = new QuestionAnalyzer(file.getInputStream());
+            try {
+                analyzer.startAnalyze();
+                qlist = analyzer.getQuestions();
+            } catch (Exception e) {
+                throw new RuntimeException("文件解析失败");
+            }
+
+        } else{
+            qlist = questionService.parse(file.getInputStream());
+        }
         QuestionBank bank = new QuestionBank(bankname);
         questionBankDAO.createBank(bank);
         for(Question q : qlist){
