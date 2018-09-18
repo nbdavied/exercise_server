@@ -2,11 +2,23 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.dw.exercise.dao.TestResultDAO">
+    <resultMap id="testresult" type="TestResult">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="paper_id" property="paperId" jdbcType="INTEGER"/>
+        <result column="sub_time" property="subTime" jdbcType="INTEGER"/>
+        <result column="score" property="score" jdbcType="INTEGER"/>
+        <result column="s_right" property="sRight" jdbcType="INTEGER"/>
+        <result column="m_right" property="mRight" jdbcType="INTEGER"/>
+        <result column="t_right" property="tRight" jdbcType="INTEGER"/>
+        <result column="s_total" property="sTotal" jdbcType="INTEGER"/>
+        <result column="m_total" property="mTotal" jdbcType="INTEGER"/>
+        <result column="t_total" property="tTotal" jdbcType="INTEGER"/>
+    </resultMap>
     <insert id="insert" useGeneratedKeys="true" keyProperty="id">
         insert into test_result (paper_id, sub_time, score, s_right, m_right, t_right, s_total, m_total, t_total)
         values(#{paperId}, #{subTime}, #{score}, #{sRight}, #{mRight}, #{tRight}, #{sTotal}, #{mTotal}, #{tTotal})
     </insert>
-    <select id="getResultByPaperId" resultType="TestResult">
+    <select id="getResultByPaperId" resultMap="testresult">
         select id, paper_id, sub_time, score, s_right, m_right, t_right, s_total, m_total, t_total
         from test_result where paper_id = #{paperId}
     </select>

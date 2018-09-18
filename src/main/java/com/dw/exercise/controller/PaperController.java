@@ -153,6 +153,7 @@ public class PaperController {
     }
     @GetMapping("/result")
     public List<TestResult> getResultsOfPaper(Integer paperId){
-        return resultDAO.getResultByPaperId(paperId);
+        List<TestResult> result =  resultDAO.getResultByPaperId(paperId);
+        return result;
     }
 }
