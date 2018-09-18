@@ -121,9 +121,10 @@ public class QuestionAnalyzer {
 				{
 					int[] answerindex = parseAnswer(line);
                     parseAnswer(q, tmpChoices, answerindex);
-                    tmpChoices = new ArrayList<>();
+
 					break;
 				}
+                tmpChoices = new ArrayList<>();
 				q = readQuestion(line);
 				q.setType("s");
 				state = 4;
@@ -142,9 +143,10 @@ public class QuestionAnalyzer {
 				{
 					int[] answerindex = parseAnswer(line);
                     parseAnswer(q, tmpChoices, answerindex);
-                    tmpChoices = new ArrayList<>();
+
 					break;
 				}
+                tmpChoices = new ArrayList<>();
 				q = readQuestion(line);
 				q.setType("m");
 				state = 5;

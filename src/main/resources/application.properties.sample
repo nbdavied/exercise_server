@@ -1,0 +1,10 @@
+spring.datasource.url=
+spring.datasource.username=
+spring.datasource.password=
+
+server.servlet.context-path=/api
+
+mybatis.type-aliases-package=com.dw.exercise.entity
+mybatis.mapper-locations=classpath:mybatis/mapper/*.xml
+
+debug=true
