@@ -5,6 +5,7 @@ import java.util.Date;
 public class TestResult {
     private Integer id;
     private Integer paperId;
+    private String paperNo;
     private Date subTime;
     private Integer score;
     private Integer sRight;
@@ -28,6 +29,14 @@ public class TestResult {
 
     public void setPaperId(Integer paperId) {
         this.paperId = paperId;
+    }
+
+    public String getPaperNo() {
+        return paperNo;
+    }
+
+    public void setPaperNo(String paperNo) {
+        this.paperNo = paperNo;
     }
 
     public Date getSubTime() {

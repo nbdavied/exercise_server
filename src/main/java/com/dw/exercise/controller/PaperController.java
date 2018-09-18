@@ -146,4 +146,13 @@ public class PaperController {
         paperDAO.updateById(paper);
         return result.getId();
     }
+    @PostMapping("/time")
+    public void setRestTime(@RequestBody TestPaper paper){
+        paper.setStatus("1");
+        paperDAO.updateById(paper);
+    }
+    @GetMapping("/result")
+    public List<TestResult> getResultsOfPaper(Integer paperId){
+        return resultDAO.getResultByPaperId(paperId);
+    }
 }
