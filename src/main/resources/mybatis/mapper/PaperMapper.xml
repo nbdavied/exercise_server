@@ -29,7 +29,7 @@
     <insert id="batchInsertPaperQuestion" parameterType="java.util.List">
         insert into paper_question(paper_id, question_id, no, selected, is_right) values
         <foreach collection="list" item="item" separator="," index="index">
-            (#{item.paperId}, #{item.questionId}, #{item.no}, #{item.selected,typeHandler=com.dw.util.mybatis.handler.IntegerListTypeHandler}, #{right})
+            (#{item.paperId}, #{item.questionId}, #{item.no}, #{item.selected,typeHandler=com.dw.util.mybatis.handler.IntegerListTypeHandler}, #{item.right})
         </foreach>
     </insert>
     <select id="getPaperOfUser" parameterType="java.lang.Integer" resultMap="paper">
