@@ -86,8 +86,22 @@ public class PaperController {
         return list;
     }
     @PostMapping("/start")
-    public void startPaper(@RequestBody Integer PaperId){
-
+    @Transactional
+    public TestPaper startPaper(@RequestBody TestPaper paper){
+        Integer paperId = paper.getId();
+        paper = paperDAO.getPaperInfoWithId(paperId);
+        if("0".equals(paper.getStatus())){
+            paper.setRestTime(paper.getTotalTime());
+            paper.setStatus("1");
+            paperDAO.updateById(paper);
+            paperDAO.clearSelectInPaper(paperId);
+        }else if ("2".equals(paper.getStatus())){
+            paper.setRestTime(paper.getTotalTime());
+            paper.setStatus("1");
+            paperDAO.updateById(paper);
+            paperDAO.clearSelectInPaper(paperId);
+        }
+        return paper;
     }
     /**
      * 更改选项

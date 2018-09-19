@@ -52,4 +52,7 @@
     <update id="updateById" >
         update test_paper set status = #{status}, rest_time = #{restTime} where id = #{id}
     </update>
+    <update id="clearSelectInPaper">
+        update paper_question set selected = NULL, is_right=0 where paper_id = #{paperId}
+    </update>
 </mapper>
