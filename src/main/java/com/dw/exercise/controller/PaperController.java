@@ -3,6 +3,7 @@ package com.dw.exercise.controller;
 import com.dw.exercise.dao.PaperDAO;
 import com.dw.exercise.dao.QuestionDAO;
 import com.dw.exercise.dao.TestResultDAO;
+import com.dw.exercise.dao.TestResultDetailDAO;
 import com.dw.exercise.entity.*;
 import com.dw.exercise.security.AppAuthToken;
 import com.dw.util.StringUtil;
@@ -25,6 +26,8 @@ public class PaperController {
     private QuestionDAO questionDAO;
     @Resource
     private TestResultDAO resultDAO;
+    @Resource
+    private TestResultDetailDAO detailDAO;
 
     @PostMapping("")
     @Transactional
@@ -158,6 +161,7 @@ public class PaperController {
         paper.setStatus("2");
         paper.setRestTime(paper.getTotalTime());
         paperDAO.updateById(paper);
+        detailDAO.saveResultDetail(result.getId());
         return result.getId();
     }
     @PostMapping("/time")
@@ -169,5 +173,13 @@ public class PaperController {
     public List<TestResult> getResultsOfPaper(Integer paperId){
         List<TestResult> result =  resultDAO.getResultByPaperId(paperId);
         return result;
+    }
+    @GetMapping("/detail/{id}")
+    public List<QuestionWithAnswerAndSelect> getResultDetails(@PathVariable Integer id, String type, String onlywrong){
+        Map<String, Object> map = new HashMap<>();
+        map.put("resultId", id);
+        map.put("type", type);
+        map.put("onlywrong", onlywrong);
+        return detailDAO.getDetail(map);
     }
 }

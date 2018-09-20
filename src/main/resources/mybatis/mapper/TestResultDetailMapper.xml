@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dw.exercise.dao.TestResultDetailDAO">
+    <resultMap id="question" type="QuestionWithAnswerAndSelect">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="question" property="question" jdbcType="VARCHAR"/>
+        <result column="type" property="type" jdbcType="VARCHAR"/>
+        <result column="edit_flag" property="editFlag" jdbcType="VARCHAR"/>
+        <result column="bank_id" property="bankId" jdbcType="INTEGER"/>
+        <result column="selected" property="selected" jdbcType="VARCHAR"
+                typeHandler="com.dw.util.mybatis.handler.IntegerListTypeHandler"/>
+        <result column="answers" property="answers" jdbcType="VARCHAR"
+                typeHandler="com.dw.util.mybatis.handler.IntegerListTypeHandler"/>
+        <result column="is_right" property="right" jdbcType="BOOLEAN"/>
+        <collection property="choices" javaType="ArrayList" ofType="Choice" column="id" select="getChoice"/>
+    </resultMap>
+    <insert id="saveResultDetail">
+        insert into test_result_detail (result_id, question_id, selected, answers, is_right)
+        select c.id as result_id, a.question_id,a.selected, answers, a.is_right from test_result c
+        left join  paper_question a on c.paper_id = a.paper_id
+        left join (select question_id, GROUP_CONCAT(id SEPARATOR ',') as answers from choice where is_right = 1
+        group by question_id) b on a.question_id = b.question_id
+        where c.id = #{resultId}
+    </insert>
+    <select id="getDetail" parameterType="map" resultMap="question">
+        select a.question_id as id, b.question, b.type, b.edit_flag, b.bank_id, a.selected, a.answers, a.is_right
+        from test_result_detail a left join question b on a.question_id = b.id
+        where a.result_id = #{resultId}
+        <if test="type != null and type != ''">
+            and b.type = #{type}
+        </if>
+        <if test="onlywrong = '1'">
+            and a.is_right=0
+        </if>
+    </select>
+    <select id="getChoice" resultType="Choice">
+        select id, text, question_id, is_right from choice where question_id = #{id}
+    </select>
+</mapper>
