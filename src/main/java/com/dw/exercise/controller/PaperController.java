@@ -175,7 +175,7 @@ public class PaperController {
         return result;
     }
     @GetMapping("/detail/{id}")
-    public List<QuestionWithAnswerAndSelect> getResultDetails(@PathVariable Integer id, String type, String onlywrong){
+    public List<QuestionWithAnswerAndSelect> getResultDetails(@PathVariable Integer id, String type, Boolean onlywrong){
         Map<String, Object> map = new HashMap<>();
         map.put("resultId", id);
         map.put("type", type);

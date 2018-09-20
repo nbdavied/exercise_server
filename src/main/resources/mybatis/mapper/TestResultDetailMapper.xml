@@ -30,7 +30,7 @@
         <if test="type != null and type != ''">
             and b.type = #{type}
         </if>
-        <if test="onlywrong = '1'">
+        <if test="onlywrong == true">
             and a.is_right=0
         </if>
     </select>
