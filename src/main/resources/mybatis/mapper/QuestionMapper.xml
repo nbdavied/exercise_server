@@ -32,12 +32,20 @@
 
     <select id="getNextQuestionInBankId" resultMap="questionMap">
         select id, question,type, edit_flag, bank_id
-        from question where bank_id = #{bankId} and id > #{id} order by id asc limit 1
+        from question where bank_id = #{bankId} and id > #{id}
+        <if test="type != null and type != ''">
+            and type = #{type}
+        </if>
+         order by id asc limit 1
     </select>
     <select id="getNextQuestionInWrongCollection" resultMap="questionMap" parameterType="map">
         select id, question,  type, edit_flag, bank_id from question
           where id in (select question_id from wrong_collection where user_id = #{userId} and bank_id = #{bankId})
-          and id > #{lastId} order by id asc limit 1
+          and id > #{lastId}
+          <if test="type != null and type != ''">
+              and type = #{type}
+          </if>
+          order by id asc limit 1
     </select>
     <select id="getQuestionRandomlyInBankId" resultMap="questionMap">
         select t1.id, question,  type, edit_flag, bank_id from question t1
@@ -69,7 +77,10 @@
         delete from question where bank_id = #{bankId}
     </delete>
     <select id="getQuestionIdsWithBankAndType" resultType="java.lang.Integer">
-        select id from question where bank_id = #{bankId} and type=#{type}
+        select id from question where bank_id = #{bankId}
+        <if test="type != null and type != ''">
+            and type=#{type}
+        </if>
     </select>
     <select id="getQuestionsInPaperOfType" resultMap="questionSelectedMap" parameterType="map">
         select b.id, b.question, b.type, b.edit_flag, b.bank_id, a.selected from paper_question a left join question b on a.question_id = b.id

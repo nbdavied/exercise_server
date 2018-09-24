@@ -9,6 +9,7 @@ import com.dw.exercise.service.QuestionService;
 import com.dw.exercise.vo.QuestionNoAnswer;
 import com.dw.exercise.vo.QuestionNoAnswerWithSelected;
 import com.dw.util.QuestionAnalyzer;
+import com.dw.util.StringUtil;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.springframework.lang.Nullable;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -43,7 +44,7 @@ public class QuestionController {
      * @return
      */
     @GetMapping("/next")
-    public QuestionNoAnswer nextQuestion(Integer bankId, Integer last, String wrong){
+    public QuestionNoAnswer nextQuestion(Integer bankId, Integer last, String wrong, String type){
         if(bankId == null){
             throw new RuntimeException("未指定题库编号");
         }
@@ -65,11 +66,17 @@ public class QuestionController {
             map.put("bankId", bankId);
             map.put("lastId", last);
             map.put("userId", user.getId());
+            if(!StringUtil.isEmpty(type)){
+                map.put("type", type);
+            }
             question = questionDAO.getNextQuestionInWrongCollection(map);
         }else {
             question = new Question();
             question.setBankId(bankId);
             question.setId(last);
+            if(!StringUtil.isEmpty(type)){
+                question.setType(type);
+            }
             question = questionDAO.getNextQuestionInBankId(question);
         }
         return prepareQuestion(question);
@@ -81,7 +88,7 @@ public class QuestionController {
      * @return
      */
     @GetMapping("/random")
-    public QuestionNoAnswer randomQuestion(Integer bankId, String wrong){
+    public QuestionNoAnswer randomQuestion(Integer bankId, String wrong, String type){
         if(bankId == null){
             throw new RuntimeException("未指定题库编号");
         }
@@ -95,18 +102,30 @@ public class QuestionController {
             }
         }
         Question question;
+        Question tmp = new Question();
+        tmp.setBankId(bankId);
+        if(!StringUtil.isEmpty(type)){
+            tmp.setType(type);
+        }
         if(onlyWrong){
-            WrongCollection collection = new WrongCollection();
-            collection.setBankId(bankId);
-            collection.setUserId(user.getId());
-            collection = wrongCollectionDAO.randomlySelect(collection);
-            if(collection == null){
-                question = null;
+
+            List<Integer> ids = wrongCollectionDAO.getQuestionIdsWithBankAndType(tmp);
+            if(ids.size() == 0){
+                return null;
             }else{
-                question = questionDAO.getQuestionById(collection.getQuestionId());
+                Random r = new Random();
+                int i = r.nextInt(ids.size());
+                question = questionDAO.getQuestionById(ids.get(i));
             }
         }else {
-            question = questionDAO.getQuestionRandomlyInBankId(bankId);
+
+            List<Integer> ids = questionDAO.getQuestionIdsWithBankAndType(tmp);
+            if(ids.size() == 0){
+                return null;
+            }
+            Random r = new Random();
+            int i = r.nextInt(ids.size());
+            question = questionDAO.getQuestionById(ids.get(i));
         }
         return prepareQuestion(question);
     }
@@ -128,7 +147,7 @@ public class QuestionController {
         List<Choice> rightChoices = q.getRightChoices();
         //对登陆用户判断提交的答案是否正确
         User user = userDAO.getUserByUsername(username);
-        if(user != null){
+        if(user != null && subs.size() > 0){
             boolean bingo = true;
             if(subs.size() != rightChoices.size()){
                 //判断答案数量一致
