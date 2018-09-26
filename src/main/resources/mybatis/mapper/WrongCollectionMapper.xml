@@ -16,10 +16,18 @@
         ) and bank_id = #{bankId} and user_id = #{userId}
         limit 1
     </select>
+    <select id="getQuestionIdsWithBankAndType" resultType="java.lang.Integer">
+        select question_id from wrong_collection a left join question b on a.question_id = b.id
+        where a.bank_id = #{bankId}
+        <if test="type != null and type != ''">
+            and b.type = #{type}
+        </if>
+    </select>
     <delete id="deleteWrongCollection">
         delete from wrong_collection where user_id = #{userId} and question_id = #{questionId}
     </delete>
     <delete id="deleteInBank" parameterType="int">
         delete from wrong_collection where bank_id = #{bankId}
     </delete>
+
 </mapper>

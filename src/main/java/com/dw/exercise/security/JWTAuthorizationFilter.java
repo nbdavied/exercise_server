@@ -2,6 +2,7 @@ package com.dw.exercise.security;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -40,9 +41,14 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
         String token = request.getHeader(HEADER_STRING);
         token = token.replace(TOKEN_PREFIX, "");
         if(token != null){
-            DecodedJWT jwt = JWT.require(Algorithm.HMAC512(SECRET.getBytes()))
-                    .build()
-                    .verify(token);
+            DecodedJWT jwt = null;
+            try{
+                jwt = JWT.require(Algorithm.HMAC512(SECRET.getBytes()))
+                        .build()
+                        .verify(token);
+            }catch (JWTVerificationException exception){
+                return null;
+            }
             String username = jwt.getSubject();
             Integer userId = jwt.getClaim("uid").asInt();
 
