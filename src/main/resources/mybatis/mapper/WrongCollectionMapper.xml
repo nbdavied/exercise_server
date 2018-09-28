@@ -18,7 +18,7 @@
     </select>
     <select id="getQuestionIdsWithBankAndType" resultType="java.lang.Integer">
         select question_id from wrong_collection a left join question b on a.question_id = b.id
-        where a.bank_id = #{bankId}
+        where a.bank_id = #{bankId} and a.user_id = #{userId}
         <if test="type != null and type != ''">
             and b.type = #{type}
         </if>

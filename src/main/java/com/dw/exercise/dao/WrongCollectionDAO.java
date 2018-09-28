@@ -2,6 +2,7 @@ package com.dw.exercise.dao;
 
 import com.dw.exercise.entity.Question;
 import com.dw.exercise.entity.WrongCollection;
+import com.dw.exercise.query.WrongCollectionQuery;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -15,5 +16,5 @@ public interface WrongCollectionDAO {
     int deleteWrongCollection(WrongCollection collection);
 
     int deleteInBank(int bankId);
-    List<Integer> getQuestionIdsWithBankAndType(Question question);
+    List<Integer> getQuestionIdsWithBankAndType(WrongCollectionQuery query);
 }

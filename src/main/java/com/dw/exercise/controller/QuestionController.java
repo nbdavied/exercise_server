@@ -5,6 +5,7 @@ import com.dw.exercise.dao.UserDAO;
 import com.dw.exercise.dao.WrongCollectionDAO;
 import com.dw.exercise.entity.*;
 import com.dw.exercise.dao.QuestionDAO;
+import com.dw.exercise.query.WrongCollectionQuery;
 import com.dw.exercise.service.QuestionService;
 import com.dw.exercise.vo.QuestionNoAnswer;
 import com.dw.exercise.vo.QuestionNoAnswerWithSelected;
@@ -108,8 +109,13 @@ public class QuestionController {
             tmp.setType(type);
         }
         if(onlyWrong){
-
-            List<Integer> ids = wrongCollectionDAO.getQuestionIdsWithBankAndType(tmp);
+            WrongCollectionQuery wQuery = new WrongCollectionQuery();
+            wQuery.setBankId(bankId);
+            wQuery.setUserId(user.getId());
+            if(!StringUtil.isEmpty(type)){
+                wQuery.setType(type);
+            }
+            List<Integer> ids = wrongCollectionDAO.getQuestionIdsWithBankAndType(wQuery);
             if(ids.size() == 0){
                 return null;
             }else{
