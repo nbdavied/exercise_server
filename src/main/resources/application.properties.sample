@@ -8,3 +8,7 @@ mybatis.type-aliases-package=com.dw.exercise.entity
 mybatis.mapper-locations=classpath:mybatis/mapper/*.xml
 
 debug=true
+
+# Î¢ÐÅÐ¡³ÌÐò
+miniapp.appid=
+miniapp.secret=

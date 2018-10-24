@@ -194,7 +194,7 @@ public class QuestionController {
     }
     @RequestMapping(value = "/edit/{quesId}", method = RequestMethod.GET)
     public Question getQuestionForEdit(@PathVariable("quesId") int quesId){
-        return null;
+        return questionDAO.getQuestionById(quesId);
     }
     @RequestMapping(value = "/edit", method = RequestMethod.POST)
     public void editQuestionAnswer(Question question){

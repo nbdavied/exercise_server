@@ -9,7 +9,9 @@ import com.dw.exercise.entity.User;
 import com.dw.exercise.service.AuthService;
 import com.dw.exercise.vo.AuthUser;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -32,6 +34,10 @@ public class AuthController {
     @Resource
     UserDAO userDAO;
 
+    @Value("${miniapp.appid")
+    private String miniAppId;
+    @Value("${miniapp.secret}")
+    private String miniAppSecret;
     @RequestMapping("/signup")
     public User signup(@RequestBody AuthUser authUser, HttpServletResponse response){
         return authService.singUp(authUser);
@@ -67,5 +73,9 @@ public class AuthController {
         writer.write(result);
         writer.flush();
         writer.close();
+    }
+    @PostMapping("/wxlogin")
+    public void wxLogin(String code){
+
     }
 }
