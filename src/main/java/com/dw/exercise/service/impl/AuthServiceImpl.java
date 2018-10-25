@@ -55,7 +55,8 @@ public class AuthServiceImpl implements AuthService {
         user.setRegTime(now);
         auth.setGenTime(now);
         auth.setToken(encoder.encode(auth.getToken()));
-        auth.setServer("local");
+        auth.setIdentityType("username");
+        auth.setIdentifier(authUser.getUsername());
         List<String> roles = new ArrayList<String>();
         roles.add("ROLE_USER");
         user.setRoles(roles);

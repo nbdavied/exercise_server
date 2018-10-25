@@ -3,10 +3,13 @@ package com.dw.exercise.entity;
 import java.util.Date;
 
 public class UserAuth {
+    private int id;
     private int userId;
-    private String server;
+    private String identityType;
+    private String identifier;
     private String token;
     private Date genTime;
+    private Date lastLoginTime;
 
     public int getUserId() {
         return userId;
@@ -16,13 +19,6 @@ public class UserAuth {
         this.userId = userId;
     }
 
-    public String getServer() {
-        return server;
-    }
-
-    public void setServer(String server) {
-        this.server = server;
-    }
 
     public String getToken() {
         return token;
@@ -40,4 +36,35 @@ public class UserAuth {
         this.genTime = genTime;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getIdentityType() {
+        return identityType;
+    }
+
+    public void setIdentityType(String identityType) {
+        this.identityType = identityType;
+    }
+
+    public String getIdentifier() {
+        return identifier;
+    }
+
+    public void setIdentifier(String identifier) {
+        this.identifier = identifier;
+    }
+
+    public Date getLastLoginTime() {
+        return lastLoginTime;
+    }
+
+    public void setLastLoginTime(Date lastLoginTime) {
+        this.lastLoginTime = lastLoginTime;
+    }
 }

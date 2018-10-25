@@ -25,7 +25,7 @@ public class UserDetailsServiceImpl implements UserDetailsService{
         }
         UserAuth auth = new UserAuth();
         auth.setUserId(user.getId());
-        auth.setServer("local");
+        auth.setIdentityType("username");
         auth = userDAO.getUserAuthByIdAndServer(auth);
         return JwtUserFactory.create(user, auth);
     }

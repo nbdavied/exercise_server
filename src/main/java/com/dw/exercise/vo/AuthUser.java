@@ -156,7 +156,7 @@ public class AuthUser {
     public UserAuth toUserAuth(){
         UserAuth auth = new UserAuth();
         auth.setUserId(this.id);
-        auth.setServer(this.server);
+        auth.setIdentityType(this.server);
         auth.setToken(this.password);
         auth.setGenTime(this.genTime);
         return auth;

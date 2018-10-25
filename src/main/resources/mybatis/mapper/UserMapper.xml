@@ -28,9 +28,9 @@
     </insert>
     <insert id="createUserAuth">
         insert into user_auth(
-            user_id, server, token, gen_time)
+            user_id, identity_type, identifier, token, gen_time)
         values (
-          #{userId}, #{server}, #{token}, #{genTime, jdbcType=TIMESTAMP}
+          #{userId}, #{identityType}, #{identifier}, #{token}, #{genTime, jdbcType=TIMESTAMP}
         )
     </insert>
     <select id="getUserByUsername" resultMap="userMap">
@@ -38,6 +38,6 @@
         from user where username = #{username}
     </select>
     <select id="getUserAuthByIdAndServer" resultType="UserAuth">
-        select  user_id, server, token, gen_time from user_auth where user_id = #{userId} and server = #{server}
+        select  user_id, identity_type, token, gen_time, identifier from user_auth where user_id = #{userId} and identity_type = #{identityType}
     </select>
 </mapper>
