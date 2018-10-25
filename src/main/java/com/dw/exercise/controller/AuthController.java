@@ -6,6 +6,8 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.dw.exercise.dao.UserDAO;
 import com.dw.exercise.entity.User;
+import com.dw.exercise.manager.MiniAppManager;
+import com.dw.exercise.model.dto.MiniAppOpenidSession;
 import com.dw.exercise.service.AuthService;
 import com.dw.exercise.vo.AuthUser;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,11 +35,9 @@ public class AuthController {
     AuthService authService;
     @Resource
     UserDAO userDAO;
+    @Autowired
+    MiniAppManager miniAppManager;
 
-    @Value("${miniapp.appid")
-    private String miniAppId;
-    @Value("${miniapp.secret}")
-    private String miniAppSecret;
     @RequestMapping("/signup")
     public User signup(@RequestBody AuthUser authUser, HttpServletResponse response){
         return authService.singUp(authUser);
@@ -76,6 +76,7 @@ public class AuthController {
     }
     @PostMapping("/wxlogin")
     public void wxLogin(String code){
+        MiniAppOpenidSession loginResult = miniAppManager.code2Session(code);
 
     }
 }
