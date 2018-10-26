@@ -28,16 +28,23 @@
     </insert>
     <insert id="createUserAuth">
         insert into user_auth(
-            user_id, identity_type, identifier, token, gen_time)
+            user_id, identity_type, identifier, token, gen_time, last_login_time)
         values (
-          #{userId}, #{identityType}, #{identifier}, #{token}, #{genTime, jdbcType=TIMESTAMP}
+          #{userId}, #{identityType}, #{identifier}, #{token}, #{genTime, jdbcType=TIMESTAMP}, #{lastLoginTime, jdbcType=TIMESTAMP}
         )
     </insert>
     <select id="getUserByUsername" resultMap="userMap">
         select id, username, nickname, gender, birthday, certid, mobile, email, address, avatar, reg_time, roles
         from user where username = #{username}
     </select>
-    <select id="getUserAuthByIdAndServer" resultType="UserAuth">
-        select  user_id, identity_type, token, gen_time, identifier from user_auth where user_id = #{userId} and identity_type = #{identityType}
+    <select id="getUserById" resultMap="userMap">
+        select id,  nickname, gender, birthday, certid, mobile, email, address, avatar, reg_time, roles
+        from user where id = #{userId}
     </select>
+    <select id="getUserAuthByIdAndServer" resultType="UserAuth">
+        select id, user_id, identity_type, token, gen_time, identifier from user_auth where user_id = #{userId} and identity_type = #{identityType}
+    </select>
+    <update id="updateAuthTokenAndLoginTime">
+        update user_auth set token = #{token}, last_login_time = #{lastLoginTime} where id = #{id}
+    </update>
 </mapper>

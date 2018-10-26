@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dw.exercise.dao.UserAuthDAO">
+    <select id="getUserAuthByIdentifierAndType" resultType="UserAuth">
+        select id, user_id, identity_type, token, gen_time, identifier from user_auth where identifier = #{identifier} and identity_type = #{identityType}
+    </select>
+</mapper>

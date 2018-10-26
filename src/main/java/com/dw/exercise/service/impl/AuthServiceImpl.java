@@ -1,6 +1,7 @@
 package com.dw.exercise.service.impl;
 
 import com.auth0.jwt.JWT;
+import com.dw.exercise.dao.UserAuthDAO;
 import com.dw.exercise.dao.UserDAO;
 import com.dw.exercise.entity.User;
 import com.dw.exercise.entity.UserAuth;
@@ -32,32 +33,23 @@ public class AuthServiceImpl implements AuthService {
 
     @Resource
     private UserDAO userDAO;
+    @Resource
+    private UserAuthDAO userAuthDAO;
 
     @Override
-    public User singUp(AuthUser authUser) {
-        if(StringUtils.isEmpty(authUser.getUsername())){
-            throw new RuntimeException("用户名不能为空");
+    public User signup(User user, UserAuth auth) {
+        if(userAuthDAO.getUserAuthByIdentifierAndType(auth) != null){
+            throw new RuntimeException("用户已存在");
         }
-        if(StringUtils.isEmpty(authUser.getPassword())){
-            throw new RuntimeException("密码不能为空");
+        if("username".equals(auth.getIdentityType())) {
+            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+            auth.setToken(encoder.encode(auth.getToken()));
         }
-        if(StringUtils.isEmpty(authUser.getNickname())){
-            throw new RuntimeException("昵称不能为空");
-        }
-        if(userDAO.getUserByUsername(authUser.getUsername()) != null){
-            throw new RuntimeException("用户名已存在");
-        }
-        User user = authUser.toUser();
-        UserAuth auth = authUser.toUserAuth();
-
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         Date now = new Date();
         user.setRegTime(now);
         auth.setGenTime(now);
-        auth.setToken(encoder.encode(auth.getToken()));
-        auth.setIdentityType("username");
-        auth.setIdentifier(authUser.getUsername());
-        List<String> roles = new ArrayList<String>();
+        auth.setLastLoginTime(now);
+        List<String> roles = new ArrayList<>();
         roles.add("ROLE_USER");
         user.setRoles(roles);
         userDAO.createUser(user);

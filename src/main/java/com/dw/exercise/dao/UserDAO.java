@@ -11,10 +11,14 @@ public interface UserDAO {
     int createUser(User user);
 
     User getUserByUsername(String username);
+    User getUserById(Integer uerId);
 
     List<User> getAllUsers();
 
     UserAuth getUserAuthByIdAndServer(UserAuth auth);
 
     int createUserAuth(UserAuth auth);
+
+
+    int updateAuthTokenAndLoginTime(UserAuth auth);
 }
