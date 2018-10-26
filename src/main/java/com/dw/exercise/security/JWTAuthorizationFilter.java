@@ -4,6 +4,9 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.dw.exercise.dao.UserDAO;
+import com.dw.exercise.entity.User;
+import com.dw.exercise.entity.UserAuth;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,7 +25,8 @@ import static com.dw.exercise.security.SecurityConstants.*;
 public class JWTAuthorizationFilter extends OncePerRequestFilter {
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
-
+    @Autowired
+    private UserDAO userDAO;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
@@ -52,9 +56,10 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
             String username = jwt.getSubject();
             Integer userId = jwt.getClaim("uid").asInt();
 
-            if(username != null){
-                JwtUser user = (JwtUser) userDetailsService.loadUserByUsername(username);
-                return new AppAuthToken(username, null, userId, user.getAuthorities());
+            if(userId != null){
+                User user = userDAO.getUserById(userId);
+                JwtUser jwtUser = JwtUserFactory.create(user, new UserAuth());
+                return new AppAuthToken(username, null, userId, jwtUser.getAuthorities());
             }
             return null;
         }

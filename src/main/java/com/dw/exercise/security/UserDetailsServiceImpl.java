@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 
 @Service(value = "userDetailsService")
+@Deprecated
 public class UserDetailsServiceImpl implements UserDetailsService{
     @Resource
     UserDAO userDAO;

@@ -58,12 +58,31 @@ public class AuthServiceImpl implements AuthService {
         return user;
     }
 
+    /**
+     * 用户名密码登陆
+     * @param username
+     * @param password
+     * @return
+     */
     @Override
     public String signIn(String username, String password) {
-        UsernamePasswordAuthenticationToken upToken = new UsernamePasswordAuthenticationToken(username, password);
-        final Authentication authentication = authenticationManager.authenticate(upToken);
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        User user = userDAO.getUserByUsername(username);
+//        UsernamePasswordAuthenticationToken upToken = new UsernamePasswordAuthenticationToken(username, password);
+//        final Authentication authentication = authenticationManager.authenticate(upToken);
+//        SecurityContextHolder.getContext().setAuthentication(authentication);
+        //User user = userDAO.getUserByUsername(username);
+        UserAuth auth = new UserAuth();
+        auth.setIdentifier(username);
+        auth.setIdentityType("username");
+        auth = userAuthDAO.getUserAuthByIdentifierAndType(auth);
+        if(auth == null){
+            throw new RuntimeException("用户名或密码错误");
+        }
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+
+        if(!encoder.matches(password, auth.getToken())){
+            throw new RuntimeException("用户名或密码错误");
+        }
+        User user = userDAO.getUserById(auth.getUserId());
         String token = JWT.create()
                 .withSubject(username)
                 .withClaim("uid", user.getId())

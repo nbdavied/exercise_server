@@ -9,7 +9,7 @@ import java.util.List;
 @Mapper
 public interface UserDAO {
     int createUser(User user);
-
+    @Deprecated
     User getUserByUsername(String username);
     User getUserById(Integer uerId);
 

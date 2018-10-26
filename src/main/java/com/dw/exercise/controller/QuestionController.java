@@ -6,6 +6,7 @@ import com.dw.exercise.dao.WrongCollectionDAO;
 import com.dw.exercise.entity.*;
 import com.dw.exercise.dao.QuestionDAO;
 import com.dw.exercise.query.WrongCollectionQuery;
+import com.dw.exercise.security.AppAuthToken;
 import com.dw.exercise.service.QuestionService;
 import com.dw.exercise.vo.QuestionNoAnswer;
 import com.dw.exercise.vo.QuestionNoAnswerWithSelected;
@@ -14,6 +15,7 @@ import com.dw.util.StringUtil;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.springframework.lang.Nullable;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -54,6 +56,8 @@ public class QuestionController {
         }
         boolean onlyWrong = false;
         String username = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
         User user = null;
         if("1".equals(wrong)){
             user = userDAO.getUserByUsername(username);
