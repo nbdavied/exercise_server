@@ -84,8 +84,7 @@ public class AuthServiceImpl implements AuthService {
         }
         User user = userDAO.getUserById(auth.getUserId());
         String token = JWT.create()
-                .withSubject(username)
-                .withClaim("uid", user.getId())
+                .withSubject(String.valueOf(user.getId()))
                 .withClaim("nic", user.getNickname())
                 .withArrayClaim("rol",  user.getRoles().toArray(new String[0]))
                 .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_TIME))

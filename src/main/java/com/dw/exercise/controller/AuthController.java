@@ -67,11 +67,10 @@ public class AuthController {
         DecodedJWT jwt =  JWT.require(Algorithm.HMAC512(SECRET.getBytes()))
                     .build()
                     .verify(token);
-        String username = jwt.getSubject();
-        User user = userDAO.getUserByUsername(username);
+        Integer userid = Integer.parseInt(jwt.getSubject());
+        User user = userDAO.getUserById(userid);
         String newtoken = JWT.create()
-                .withSubject(username)
-                .withClaim("uid", user.getId())
+                .withSubject(userid.toString())
                 .withClaim("nic", user.getNickname())
                 .withArrayClaim("rol",  user.getRoles().toArray(new String[0]))
                 .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
@@ -117,8 +116,7 @@ public class AuthController {
             user = userDAO.getUserById(auth.getUserId());
         }
         String token = JWT.create()
-                .withSubject(auth.getIdentifier())
-                .withClaim("uid", auth.getUserId())
+                .withSubject(String.valueOf(auth.getUserId()))
                 .withClaim("nic", "")
                 .withArrayClaim("rol",  user.getRoles().toArray(new String[0]))
                 .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_TIME))

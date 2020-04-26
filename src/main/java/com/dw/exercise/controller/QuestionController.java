@@ -149,15 +149,16 @@ public class QuestionController {
     @PostMapping("/answer/{id}")
     public List<Integer> getAnswer(@PathVariable Integer id, @RequestBody List<Integer> subs){
         String username = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
+        AppAuthToken authToken = (AppAuthToken) SecurityContextHolder.getContext().getAuthentication();
+        Integer userId = authToken.getUserId();
         Question q = questionDAO.getQuestionById(id);
         if(q == null){
             throw new RuntimeException("题目不存在");
         }
         List<Choice> rightChoices = q.getRightChoices();
         //对登陆用户判断提交的答案是否正确
-        User user = userDAO.getUserByUsername(username);
-        if(user != null && subs.size() > 0){
+        //User user = userDAO.getUserByUsername(username);
+        if(userId != null && subs.size() > 0){
             boolean bingo = true;
             if(subs.size() != rightChoices.size()){
                 //判断答案数量一致
@@ -172,7 +173,7 @@ public class QuestionController {
             }
             if(!bingo){
                 WrongCollection wrong = new WrongCollection();
-                wrong.setUserId(user.getId());
+                wrong.setUserId(userId);
                 wrong.setQuestionId(id);
                 wrong.setBankId(q.getBankId());
                 wrongCollectionDAO.insert(wrong);

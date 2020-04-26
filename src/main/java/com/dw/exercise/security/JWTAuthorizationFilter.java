@@ -53,13 +53,12 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
             }catch (JWTVerificationException exception){
                 return null;
             }
-            String username = jwt.getSubject();
-            Integer userId = jwt.getClaim("uid").asInt();
+            Integer userId = Integer.parseInt(jwt.getSubject());
 
             if(userId != null){
                 User user = userDAO.getUserById(userId);
                 JwtUser jwtUser = JwtUserFactory.create(user, new UserAuth());
-                return new AppAuthToken(username, null, userId, jwtUser.getAuthorities());
+                return new AppAuthToken(user.getUsername(), null, userId, jwtUser.getAuthorities());
             }
             return null;
         }
